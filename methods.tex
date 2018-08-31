@@ -58,7 +58,7 @@ Each MRN case consists of a low-resolution T2-weighted sequence with fat suppres
 \end{figure}
 
 \subsubsection{Ground Truths} \label{dataset_gt}
-For each MRN case, three physicians, experienced in clinical, electrophysiological, and imaging-based assessment of neuromuscular diseases (Olivier Scheidegger (OS), senior neurologist and neuroradiologist > 14 years, Benedikt Wagner (BW), neuroradiologist > 4 years, Lorenz Grunder (LG), neuroradiologist > 2 years) manually segmented the sciatic nerve, including its distal branches the tibial and fibular nerve. The nerve segmentations were performed by each physician individually on the T2-weighted images, allowing the study of the inter-rater agreement. The segmentations were performed with the ITK-SNAP~\cite{py06nimg} software using the polygon or paintbrush tool. The descriptive statistics of the ground truth segmentations and the inter-rater agreement for different metrics are summarized in Table~\ref{tab:ground_truths} and Figure~\ref{fig:inter_rater}, respectively. Figure~\ref{fig:gt_render} shows a 3D-rendering of a sciatic nerve, including the branching, based on the ground truth segmentation of OS.\\
+For each MRN case, three physicians, experienced in clinical, electrophysiological, and imaging-based assessment of neuromuscular diseases (Olivier Scheidegger (OS), senior neurologist and neuroradiologist > 14 years, Benedikt Wagner (BW), neuroradiologist > 4 years, Lorenz Grunder (LG), neuroradiologist > 2 years) manually segmented the sciatic nerve, including its distal branches the tibial and fibular nerve. The nerve segmentations were performed by each physician individually on the T2-weighted images, allowing the study of the inter-rater agreement. The segmentations were performed with the ITK-SNAP~\cite{py06nimg} software using the polygon or paintbrush tool. The descriptive statistics of the ground truth segmentations are summarized in Table~\ref{tab:ground_truths}. Figure~\ref{fig:gt_render} shows a 3D-rendering of a sciatic nerve, including the branching, based on the ground truth segmentation of OS.\\
 We obtained a consensus ground truth segmentation by the combination of the three expert ground truths via majority voting (GT in Table~\ref{tab:ground_truths}): A voxel was labelled sciatic nerve class if at least two rater segmented it. In our case the obtained consensus ground truth is identical to the result that one would have received by applying the \gls{staple} algorithm~\cite{Warfield2004SimultaneousSTAPLE}, which is a common algorithm for label fusing.\\
 
 \begin{figure}[htbp]
@@ -102,6 +102,8 @@ The Python package pymia\footnote{https://pymia.readthedocs.io/} is developed an
 ITK-SNAP\footnote{http://www.itksnap.org/} \cite{py06nimg} is an application for inspection and segmentation of medical images. The latest release of ITK-SNAP, version 3.6.0, was used to inspect the \gls{mrn} images, and to render and assess the ground truths and segmentations of the sciatic nerves.
 \subsubsection{Seaborn}
 Seaborn\footnote{https://seaborn.pydata.org/} is a statistical data visualization package for Python. We used Seaborn version 0.9.0 to analyze and plot our results.
+\subsubsection{LibreOffice Calc}
+LibreOffice Calc\footnote{https://www.libreoffice.org/} version 6.0.3.2 was used to create spreadsheets for the result tables.
 
 \subsection{Hardware}
 Training of the neural networks was done on the \gls{mia} group internal \gls{gpu} server. For most of the experiments, an NVIDIA Titan Xp had enough \gls{gpu} memory for successful training. More demanding experiments, however, were trained on a NVIDIA Quadro P6000. Data loading and transformation for data augmentation as well as the post-processing and the calculation of the evaluation metrics were done using the \gls{cpu}.
@@ -147,9 +149,9 @@ All our \gls{fcnn}'s base on the encoder-decoder architecture of the U-Net, whic
 Similarly, in the decoder path, we reduce the number of channels by half after each up-transition. We want to segment the images voxels into the two classes \textit{background} and \textit{peripheral nerve}, respectively. This is a binary classification problem. Therefore the out-layer of all our neural networks consists of only one channel. We apply the sigmoid non-linearity to the out-layer to obtain the voxel-wise probability for peripheral nerve.\\
 The chosen baseline architecture performs the segmentations on \gls{2d} images. Our \gls{mrn} images, however, are \gls{3d} images and the sciatic nerve is, none-the-less a 3D structure as well. We hypothesize that 3D-contextual information allows a neural network to create better nerve segmentations and therefore a \gls{3d} architecture should perform better than a \gls{2d} architecture. In order to investigate the impact of \gls{3d} information on the segmentation performance, we propose the following three network architectures:
 \begin{enumerate}
-  \item 2D: Baseline
-  \item 3D: Stack-wise
-  \item 3D: Patch-wise
+  \item 2D Baseline
+  \item 3D Stack-wise
+  \item 3D Patch-wise
 \end{enumerate}
 The architectures have increasing access to the \gls{3d} information of the sciatic nerve, and are demonstrated in Figure~\ref{fig:inout} with respect to the image dimensions they take as input. The \gls{ir}, T2 and ground truth images are cropped to fit the respective input dimensions. During training phase, the cropping is performed randomly in the plane, as illustrated by Figure~\ref{fig:data_augmentation} and is part of data augmentation which is presented in Section \ref{sec:trainig:data_augmentation}. In the evaluation phase, the segmentations of the \gls{3d} images are performed by splitting the images, predicting and finally merging the prediction maps. These steps are all done based on the input and output dimensions of the respective architecture.
 
@@ -197,12 +199,16 @@ Details are to be found in in Table~\ref{tab:architecture_fcnn_volumetric} in th
   \item 5-to-3: 5 Input slices, prediction of 3 slices.
 \end{itemize}
 In essence, we feed the neural network the neighbouring slices (the previous two and next two in case of the 5-to-1 variant) to which it is supposed to make predictions about. We only predict fewer slices than the input slices because we expect to get better segmentation performance. The ability of the neural network to have access to all \gls{3d} information of the neighbouring slices should make it more confident about predictions on the slice(s) in the middle.
-For the reason that our \gls{mrn} images have a much higher axial spacing (4.40 mm) as in-plane (0.52 mm) and also a lower axial resolution (30 to 60 slices) we decide to keep the up- and down-transitions in-plane and therefore do not perform pooling along the axial axis.
+For the reason that our \gls{mrn} images have a much higher axial spacing (4.40 mm) as in-plane (0.52 mm) and also a lower axial resolution (30 to 60 slices) we decide to keep the up- and down-transitions in-plane and therefore do not perform pooling along the axial axis.\\
+As test, and to further investigate the impact of \gls{3d} information we decided to train the 5-to-3 architecture and additional time with a experimental loss function based on projections: Instead
+
 
 \subsection{3D Patch-wise}
-We increase the accessible 3D information along the axial axis even further by defining a network architecture similar to Cicek et al.~\cite{Cicek20163DAnnotation} featuring one up- and down-transition less than the other architectures. On the other hand we reduce the in-plane input dimensions to $128 \times 128$, and therefore reduce the accessible in-plane information for the network. This is done mainly due to to \gls{gpu} memory limitations. Furthermore the up- and down-transitions are only applied in the in-plane dimensions for the same reasons as mentioned for the stack-wise architecture. We increase the number of slices fed to the network to 12. All the convolutional layers feature 3D kernels ($3 \times 3 \times 3$). The exact architecture is listed in table \ref{tab:architecture_fcnn_patches}.
+We increase the accessible 3D information along the axial axis even further by defining a network architecture similar to Cicek et al.~\cite{Cicek20163DAnnotation} featuring one up- and down-transition less than the other architectures. We conducted an experiment where we feeded the \gls{mrn} images to the neural network. We, however, were unable to successfully train the neural network and therefore decided to continue with a patch-based approach: We decrease the in-plane input dimensions to $128 \times 128$, and therefore reduce the accessible in-plane information for the network. We increase the number of slices fed to the network to 12. Furthermore the up- and down-transitions are only applied in the in-plane dimensions for the same reasons as mentioned for the stack-wise architecture. All the convolutional layers feature 3D kernels ($3 \times 3 \times 3$). The exact architecture is listed in table \ref{tab:architecture_fcnn_patches}.
 
 \section{Training} \label{sec:training}
+This section describes how we trained our neural networks and, therefore, corresponds to the steps depicted in Figure~\ref{fig:pipeline} \textbf{A)}. Once trained, a neural network is evaluated according to Section~\ref{sec:evaluation} and depicted in Figure~\ref{fig:pipeline} \textbf{B)}.
+
 \subsection{Data Augmentation} \label{sec:trainig:data_augmentation}
 A common problem during the training of neural networks is called overfitting. During training, the weights of the neural network get adjusted via the optimizer to reduce the loss on the training set. The primary goal of the training is to emphasize the neural network to learn meaningful features which generalize to previously unseen data, which is typically defined by the test set. 
 Depending on the capacity of the neural network (its ability to fit a wide variety of functions, i.e. data \cite{Goodfellow2016DeepLearning}), the complexity of the task to solve, and the size of the training set, a neural network can start to overfit. If the neural network is somewhat complex, and training data is sparse, the neural network can begin to memorize the training examples rather than learning important features. This results in a high test-loss and hence a low performance on previously seen data, despite the training-loss being very low. Several counter-measures to overfitting exist, of which the most effective one is merely to use a bigger dataset. However, gathering and preparing a bigger dataset is time-consuming and often not possible, especially for medical images.\\
@@ -222,7 +228,7 @@ We applied data augmentation by randomly transforming the data online during the
 We used the binary cross-entropy loss to train our neural networks. Due to the small amount of voxels belonging to the sciatic nerve (0.14\%) the segmentation task results in a highly imbalanced classification problem, with the \textit{background}-class, i.e. no sciatic nerve, being over 99 times more abundant than the \textit{sciatic-nerve}-class. This makes the training of the neural networks heavily biased towards background segmentation: In the beginning, the training loss can easily be reduced substantially by assigning all voxels to the \textit{background}-class. This is a common problem for medical image segmentation tasks with neural networks~\cite{Litjens2017AAnalysis,Tetteh2018DeepVesselNet:Volumes,Baumgartner2017AnSegmentation,Selvan2018ExtractionNetworks,Kayalibay2017CNN-basedData}\\
 Buda et al.~\cite{BudaANetworks} systematically analyzed the impact of class imbalance on the classification performance on \acrshort{cnn}'s. They list and compare frequently applied solutions to this issue.\\
 A solution to class imbalance is to use a weighted- or rebalancing loss. Ronneberger et al. \cite{Ronneberger2015U-Net:Segmentation} and Cicek et al.~\cite{Cicek20163DAnnotation} use a weighted cross-entropy loss to train their 2D and 3D U-Nets, respectively. Milletari et al.~\cite{Milletari2016V-Net:Segmentation} introduced a loss based on the Dice similarity coefficient, to account for the class imbalance. Several works, especially in the medical domain, successfully applied this loss or a variant of it \cite{Selvan2018ExtractionNetworks,Kayalibay2017CNN-basedData,Drozdzal2016TheSegmentation}. Sudre et al.~\cite{Sudre2017GeneralisedSegmentations} investigated the behaviour of weighted cross-entropy, sensitivity and Dice losses for their sensitivity to different rates of class imbalance in 2D and 3D segmentation tasks. They concluded that, depending on the imbalance rate, the use of the weighted or rebalancing losses help the optimization. Baumgartner et al.~\cite{Baumgartner2017AnSegmentation} compared cross-entropy, weighted cross-entropy and the Dice loss on different network architectures for cardiac MR image segmentation. They achieved superior performances with the cross-entropy losses (the weighted version being marginally better) and concluded, that for their task, the class imbalance was not a problem. They, however, reported a foreground prevalence of approximately 25\% which is significantly higher than our prevalence of 0.14\%.\\
-Based on these results we conducted experiments with the baseline architecture to evaluate the benefit of weighted cross-entropy and Dice loss. Conversely to the results, we did not see any improvements during training or in the final performance when compared to unweighted cross-entropy loss. We, therefore, decided to use the binary cross-entropy loss for all our experiments. Additionally, we calculated and used the \gls{dice} in conjunction with the training and test losses to monitor the training progress.
+Based on these results we conducted experiments with the baseline architecture to evaluate the benefit of weighted cross-entropy and Dice loss. Conversely to the results, we did not see any improvements during training or in the final performance when compared to unweighted cross-entropy loss. We, therefore, decided to use the binary cross-entropy loss for all our experiments. Additionally, we calculated and used the \acrlong{dice} in conjunction with the training and test losses to monitor the training progress.
 
 \subsection{Optimizer}
 We use PyTorch's implementation of the Adam optimizer \cite{Kingma2014Adam:Optimization} without weight decay, $\beta_1 = 0.900$, and $\beta_2 = 0.999$ for the training of all networks. A listing of all hyperparameters can be found in Table~\ref{tab:hyperparameters} in the appendix.
@@ -231,7 +237,7 @@ We use PyTorch's implementation of the Adam optimizer \cite{Kingma2014Adam:Optim
 \begin{figure}[htbp]
     \centering
 	\includegraphics[width=\textwidth]{fpfn}
-    \caption[Issues of the Segmentations]{First results showed that the unprocessed segmentations were typically corrupted by false positive (FP) outliers false negatives visible as gaps. While the outliers impact the distance metrics, i.e. \gls{hd}, the gaps make post-processing harder: Simply keeping the largest volume present, would remove all smaller correctly segmented volumes (TP).}
+    \caption[Issues of the Segmentations]{First results showed that the unprocessed segmentations were typically corrupted by false positive (FP) outliers and false negatives visible as gaps. While the outliers impact the distance metrics, i.e. \gls{hd}, the gaps make post-processing harder: Simply keeping the largest volume present, would remove all smaller correctly segmented volumes (TP).}
     \label{fig:fpfn}
 \end{figure}
 Early experiments showed that there are \gls{fp} outliers as well as \gls{fn} discontinuities present in the segmentations, see Figure~\ref{fig:post_processing}. The distance metrics, especially the \acrshort{hd}, are sensitive to these (\acrshort{fp}). The (\acrshort{fp}) outliers all tend to have small volumes and therefore could easily be removed by keeping only the largest volume present in the segmentation. The presence of (\acrshort{fn}), visible as gaps, however, makes this a more difficult task: They split the nerve into multiple correctly segmented volumes (\acrshort{tp}). Simple and naive post-processing by keeping only the largest volume, would also remove all smaller correctly segmented volumes.\\
@@ -242,35 +248,50 @@ With the aim to increase the quality of sciatic nerve segmentations by reducing 
     \label{fig:post_processing}
 \end{figure}
 Given the anatomy of the sciatic nerve and the anatomical region the MRN images were taken from, we know it passes through both, the most proximal and distal slice. Additionally, we know that all (\acrshort{tp}) lie on a long tubular-like path along the cario-caudal axis given by the anatomy of the sciatic nerve. Once we know the path, we can use it to connect the (\acrshort{tp}) volumes.\\
-We treat this as a directed graph problem, where we want to find the cheapest path from the most proximal to the most distal slice. The intermediate steps are depicted in Figure \ref{fig:post_processing}: Figure~\ref{fig:post_processing}\textbf{A)} We predicted propabilites of the neural network are expected to be corrupted by (\acrshort{fp}) and (\acrshort{fn}). \textbf{B)} Therefore, we define the voxels of the probability image to be the graph nodes, with each having a cost of the inverse of the sciatic nerve probability to pass through. Therefore, voxels with high probability being peripehral nerve are cheap and hence favourable candidates to be part of the cheapest path. To find the cheapest path through the graph we make use of Dijkstra's Algorithm~\cite{Dijkstra1959AGraphs}. \textbf{C)} Once the cheapest path is found, we label all voxels on the path to belong to the sciatic nerve. This step joins all TP volumes on the path to form one large connected component. \textbf{D)} After we merged all TP to one volume, we only keep the largest component/volume.
+We treat this as a directed graph problem, where we want to find the cheapest path from the most proximal to the most distal slice. The intermediate steps are depicted in Figure~\ref{fig:post_processing}: \textbf{A)} The predictions of the neural networks can be corrupted by (\acrshort{fp}) and (\acrshort{fn}). \textbf{B)} Therefore, we define the voxels of the probability image to be the graph nodes, with each having a cost of the inverse of the sciatic nerve probability to pass through. Therefore, voxels with high probability being peripehral nerve are cheap and hence favourable candidates to be part of the cheapest path. To find the cheapest path through the graph we make use of Dijkstra's Algorithm~\cite{Dijkstra1959AGraphs}. \textbf{C)} Once the cheapest path is found, we label all voxels on the path to belong to the sciatic nerve. This step joins all TP volumes on the path to form one large connected component. \textbf{D)} After we merged all TP to one volume, we only keep the largest component/volume.
 
 \section{Evaluation} \label{sec:evaluation}
-\subsection{Cross-validation}
-In deep learning, evaluation of a model is typically done by \gls{lpocv}: $p$ samples are left out from the dataset to form a training set and validation set of sizes $|S_{train}| = n - p$ and $|S_{valid}| = p$. As the name implies, the model is trained on the training set. The validation set is used to validate and tune the hyperparameters of the model.
+This section describes how we evaluate our neural networks after the training phase. Section~\ref{sec:eval_cross} explains the evaluation scheme we apply. In Section~\ref{sec:eval_metrics} our evaluation metrics are presented and Section~\ref{sec:eval_strategy} describes how we deal with the fact that our neural networks have other input dimensions than the dimensions of our \gls{mrn} images.
+
+\subsection{Cross-validation} \label{sec:eval_cross}
+In deep learning, evaluation of a model is typically done by \gls{lpocv}: $p$ samples are left out from the dataset to form a training set and validation set of sizes $|S_{train}| = n - p$ and $|S_{valid}| = p$, respectively. As the name implies, the model is trained on the training set. The validation set is used to validate and tune the hyperparameters of the model.
 Depending on the dataset size, the split is done randomly or in a semi-random fashion to ensure that the subsets have the same distribution of samples.
-A good practice is to split the dataset in the same manner into three subsets, namely the training, validation and test set. Typical values for the split fractions could be 0.7, 0.1 and 0.2 for training-, validation- and test-set respectively. As no data of the test set is used for training or tuning the model, the test set allows evaluating the metrics (Section~\ref{sec:metrics}) on unseen data. \\
+A good practice is to split the dataset in the same manner into three subsets, namely the training, validation and test set. Typical values for the split fractions could be 0.7, 0.1 and 0.2 for training-, validation- and test-set respectively. As no data of the test set is used for training or tuning the model, the test set allows evaluating the metrics (Section~\ref{sec:eval_metrics}) on unseen data. \\
 The split of the dataset into three separate subsets with similar sample distribution is, however, not always possible, especially if dataset sizes are small. In such cases, evaluation with a \gls{kfcv} may be more a more practical choice: The dataset is split into $k$ equal sized folds, still aiming to have similar sample distributions. Sequentially, one of the folds is left out and used as a validation set, while the model is trained on all of the remaining folds. An approximate accuracy and performance on unseen data can be obtained by averaging the results of the evaluation metrics calculated on the $k$ validation folds.\\
 As the size of our dataset (n = 52) is comparably small to other datasets we chose to validate our models via four-fold cross-validation, i.e. our models are trained on 39 subjects and evaluated on 13 subjects. We randomly assigned the patient subjects to the folds but with stratification regarding the volunteers. I.e. we ensured that the volunteers are equally distributed. The assignment of the subjects is summarized in the Table \ref{tab:fold_assignment}. We trained and tuned the neural networks only using the reported semi-random assignment. We did not use any other assignment to develop the method.
 
-\subsection{Metrics} \label{sec:metrics}
+\subsection{Metrics} \label{sec:eval_metrics}
 To measure and assess the performance of a neural network, evaluation metrics are required. The metrics are calculated by comparison of the segmentation mask (the output of a neural network) to the ground truth obtained by majority voting of the manual expert segmenations. Taha and Hanbury~\cite{Taha2015MetricsTool} analyzed popular metrics for 3D medical image segmentation and provided metric selection guidelines. Based on the guidelines, we choose the following evaluation metrics:
 
 \begin{itemize}
 \item \acrlong{dice}:
   \begin{itemize}
-  \item Outliers are to be expected
-  \item De-facto gold standard
+  \item Outliers are to be expected.
+  \item De-facto gold standard.
   \end{itemize}
 \item \acrlong{vs}
   \begin{itemize}
-  \item Good nerve volume agreement is of clinical interest
+  \item Good nerve volume agreement is of clinical interest.
   \end{itemize}
 \item \acrlong{avd}
   \begin{itemize}
-  \item Sciatic nerve segmentations satisfy conditions for small segments
+  \item Sciatic nerve segmentations satisfy conditions for small segments.
+  \item Low sensitivity to outliers.
+  \end{itemize}
+\item \acrlong{hd95}
+  \begin{itemize}
+  \item Sciatic nerve segmentations satisfy conditions for small segments.
   \item Low sensitivity to outliers
+  \item Comparison to publications.
+  \end{itemize}
+\item \acrlong{hd}
+  \begin{itemize}
+  \item Sciatic nerve segmentations satisfy conditions for small segments.
+  \item We want to analyze the impact of our Post-processing
+  \item Comparison to publications.
   \end{itemize}
 \end{itemize}
+
 
 Let $S \in \{0, 1\}$ be the output segmentation mask of a model and $G \in \{0, 1\}$ be the ground truth.
 $S_{1}$ denotes the set of all voxels where $S = 1$, i.e., where the neural network detected the foreground. Analogously, $G_{1}$ denotes the set of all voxels where $G = 1$. The number of all voxels in a set $A$ is denoted by the cardinality operator $|A|$.
@@ -316,14 +337,35 @@ where $d_{AH}(S,G)$ is the directed average \gls{hd} that is given by
    \label{eq:dahd}
 \end{equation}
 
+\subsection{Strategy} \label{sec:eval_strategy}
+Our neural networks have smaller input dimensions than the typical size of the \gls{mrn} images ($60 \times 330 \times 384$). We need, therefore, to split the \gls{mrn} images into junks of the respective input dimensions during the evaluation phase. The junks are then fed sequentially to the neural network, and the obtained probability maps are combined to form a segmentation of the whole volume. We do the splitting and combination slice-wise for the baseline and stack-wise architectures. We crop the slices centrally to an in-plane resolution of $300 \times 300$ voxels to fit the input dimensions of the architectures. The sciatic nerves, generally located central in the transverse plane, lie within the cropped images. No cropping is needed in the case of the patch-wise architecture: The whole image is split into $12 \times 128 \times 128$ volume patches, predicted, and recombined to form the segmentation. The process of dividing, predicting and combining the \gls{mrn} images is explained in Figure~\ref{fig:eval_strategy} in more detail.
+
+\begin{figure}[htbp]
+	\centering
+	\subfloat[]
+	{
+		\label{fig:subfig:eval_stack}
+		\includegraphics[width=\textwidth]{eval_stack}
+	}
+	\hfill
+	\subfloat[]
+	{
+		\label{fig:subfig:eval_patch}
+		\includegraphics[width=\textwidth]{eval_patch}
+	}
+	\caption[Evaluation Strategy]{In the evaluation phase, a segmentation with the same dimensions as the ground truth is required from the trained neural network. In order to obtain the segmentation, the image is split into (stacks of) slices or volumes and fed to the neural network. The probability maps, which are the output of the network, are stitched together yielding a probability map of the whole volume. Simple thresholding of the probabilities results in the segmentation, which in return is used to calculate the evaluation metrics upon, together with the ground truth. \textbf{a)} The evaluation for the baseline and stack-wise architectures is done slice-wise: All slices are cropped centrally to an in-plane resolution of $300 \times 300$ voxels and fed sequentially to the neural network (in blocks of 3 or 5 for the stack-wise architecture). The resulting probability maps are concatenated, thresholded and symmetrically padded back up to the input/ground truth dimensions \textbf{b)} To get the segmentation of the patch-architecture, the input image is split into multiple $12 \times 128 \times 128$ patches. The patches are fed to the network sequentially yielding probability patches. These are combined and thresholded to obtain the segmentation.}
+	\label{fig:eval_strategy}  
+\end{figure}
+
+
 \section{Experiments} \label{sec:experiments}
-We propose the following experiments to validate our hypothesis:\\
+We propose the following experiments to validate our hypothesis:
 
-\textit{Experiment 1:} We train and evaluate the baseline architecture on our dataset to investigate whether a deep learning-based approach for fully-automatic peripheral nerve segmentation is feasible. We do not apply post-processing.\\
+\textit{Experiment 1:} We train and evaluate the baseline architecture on our \gls{mrn} images to investigate whether a deep learning-based approach for fully-automatic peripheral nerve segmentation is feasible.
 
-\textit{Experiment 2:} Driven by the hypothesis that \gls{3d} context allows for better segmentation results, we train and evaluate the volumetric and patch-based architectures on our dataset and compare their performance with the segmentation performance of the baseline architecture. We do not apply post-processing.\\
+\textit{Experiment 2:} Driven by the hypothesis that \gls{3d} context allows for better segmentation results, we train and evaluate the stack-wise and patch-wise architectures on our \gls{mrn} images and compare their performance to the segmentation performance of the baseline architecture. We do not apply post-processing.
 
-\textit{Experiment 3:} We take the best performing architecture of experiment 2 and compare the segmentation performance with and without post-processing applied.\\
+\textit{Experiment 3:} We take our best performing architecture and compare the segmentation performance with and without post-processing applied.
 
 Finally, for evaluation, we take the best performing combination of architecture and post-processing of the experiments and compare the performance to the inter-rater variability.
 
