@@ -1,0 +1,130 @@
+\pdfminorversion=6
+\documentclass[a4paper,10pt,openright]{unibe-msc}
+% Packages
+\usepackage{etex}
+\usepackage[T1]{fontenc}
+\usepackage{textcomp}
+\usepackage{bm}
+\usepackage[utf8]{inputenc}
+\usepackage[pdftex,final]{graphicx}
+\usepackage{amssymb}
+\usepackage{amsmath}                    
+\usepackage{amsfonts}
+\usepackage{mathtools}
+\usepackage{ulem}
+\usepackage[english]{babel}
+\usepackage{url}
+\usepackage{color}
+\usepackage{unibe-msc}
+\usepackage[caption=off]{subfig}
+\usepackage{hyperref}
+\usepackage{siunitx}
+\usepackage[section]{placeins}
+\usepackage{wrapfig}
+\usepackage{footmisc}
+\usepackage{rotating}
+
+% glossaries
+%\usepackage[toc,nonumberlist,noredefwarn]{glossaries}
+\let\printglossary\relax
+\let\theglossary\relax
+\let\endtheglossary\relax
+\usepackage[xindy,acronym,nonumberlist,nopostdot]{glossaries}
+\setacronymstyle{long-short}
+\input{gloss}
+\makeglossaries
+
+% Default graphics path
+\graphicspath{{img/}{plots/}}
+
+% Document metadata
+\unibelogo{ub_16pt_192}  % Don't change this
+\htilogo{TI_e} % Don't change this
+\faculty{Faculty of Medicine} % Don't change this
+\discipline{Biomedical Engineering} % Don't change this
+\subtitle{Master of Science Thesis} % Don't change this
+\title{Segmentation of Peripheral Nerves in Thigh Magnetic Resonance Neurography with Deep Learning}
+\author{Yannick M. Soom}
+\origin{Ursenbach BE}
+\date{\today}
+\supervisor{MSc Fabian Balsiger and MSc Alain Jungo}
+\affiliation{Institute for Surgical Technology \& Biomechanics, University of Bern Institute of Diagnostic and Interventional Neuroradiology, Inselspital, Bern University Hospital, University of Bern}
+
+\examiner{Prof. Dr. Mauricio Reyes and Dr. Olivier Scheidegger}
+\place{Bern}
+\frontsignature{\theplace, September 2018}
+\date{September 11\textsuperscript{th} 2018}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Hyperref setup
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Appearance of hyper links
+\definecolor{lc}{rgb}{0,0,0}
+\hypersetup{colorlinks=true, breaklinks=true, linkcolor=lc, 
+                  menucolor=lc, urlcolor=lc, anchorcolor=lc,
+                  citecolor=lc, filecolor=lc,
+                  pdftitle=\thetitle,
+                  pdfauthor=\theauthor,
+                  pdfsubject=Master Thesis,
+                  pdfkeywords={Keyword 1, Keyword 2, Keyword 3},
+                  pdfpagelayout=SinglePage}
+                  
+% Bibliography style file
+\bibliographystyle{ieee}
+
+
+\begin{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Titlepage, abstract table of contents etc.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\frontmatter
+\maketitle
+\input{abstract}
+\clearpage
+\input{acknowledgments}
+\clearpage
+\input{conformity}
+\cleardoublepage
+\tableofcontents
+\clearpage
+\listoffigures
+\clearpage
+\listoftables
+%\printglossary[title=Abbreviations, toctitle=Abbreviations]
+%\printglossary[type=\acronymtype,title={Abbreviations}]
+%\printglossary[type=\acronymtype,title=Abbreviations]
+\printglossaries
+\clearpage
+
+\mainmatter
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Main text body
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\include{introduction}
+\include{methods}
+\include{results}
+\include{conclusion}
+\include{outlook}
+
+% Uncomment this if you'd like to suppress the numbering of the
+% appendices.
+%\backmatter
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Bibliography
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Force every reference to show up (demo)
+\bibliography{mend}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Appendices
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\part*{Appendices}
+\begin{appendix}
+	\include{appendix}
+\end{appendix}
+
+\end{document}
+
+\endinput
