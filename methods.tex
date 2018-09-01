@@ -4,12 +4,12 @@ This chapter describes the materials and the methods we used for the segmentatio
 \section{Materials} \label{sec:materials}
 
 \subsection{Patient and Healthy Volunteer Data}
-Patients with clinically and electrophysiologically diagnosed neuropathy and healthy volunteers receiving a \gls{mrn} examination between 2013 and 2017 at the Inselspital, Bern University Hospital, were enrolled in a registry. After the approval by the local ethical committee, and informed consent was obtained from all participants, we retrospectively selected 52 \gls{mrn} cases, separated into a patient cohort with diagnosed neuropathy (n = 42) and a healthy volunteer cohort (n = 10).\\
+Patients with clinically and electrophysiologically diagnosed neuropathy and healthy volunteers receiving a \gls{mrn} examination between 2013 and 2017 at the Inselspital, Bern University Hospital, were enrolled in a registry. After the approval by the local ethical committee, and informed consent was obtained from all participants, we retrospectively selected 52 \gls{mrn} cases, separated into a patient cohort with diagnosed neuropathy (n = 42, 21 female, 21 male; 55.7 $\pm$ 15.7 years) and a healthy volunteer cohort (n = 10, 4 female, 6 male; 25.0 $\pm$ 2.6 years).\\
 All images were taken from the anatomical region of the thigh and contain parts of the sciatic nerve. While the images for the volunteers were all taken at the distal thigh, the images for the patients originate from variable locations between the distal thigh up to the head of the femur. The images taken more distally typically include the branching of the sciatic nerve into the fibular and tibial nerve. Some images, taken more proximally, do not include the branching.\\
 Although not used in this work, further MRN images from different anatomical regions (upper \& lower arm, lower leg) are available for the volunteer cohort. The upper leg \gls{mrn} images of the six healthy volunteers which F. Balsiger used for his master thesis ~\cite{Balsiger2016DevelopmentApproaches} are also part of the dataset.\\
 
 \subsubsection{MRN Sequences} \label{dataset_mrn}
-Each MRN case consists of a low-resolution T2-weighted sequence with fat suppression (\gls{ir}, Figure~\ref{fig:subfig:IR}) and a high-resolution T2-weighted sequence without fat suppression (T2, Figure~\ref{fig:subfig:T2}). The images were acquired with a 15-channel knee coil using a 3 Tesla Siemens MAGNETOM Verio (Siemens Healthcare GmbH, Erlangen, Germany). Table~\ref{tab:dataset} summarizes the \gls{mrn} sequence and acquisition properties.
+Each MRN case consists of a low-resolution T2-weighted sequence with fat suppression using \gls{ir} (Figure~\ref{fig:subfig:IR}) and a high-resolution T2-weighted sequence without fat suppression (Figure~\ref{fig:subfig:T2}). We refer in this work to the corresponding \gls{mrn} images with IR and T2, respectively. The images were acquired with a 15-channel knee coil using a 3 Tesla Siemens MAGNETOM Verio (Siemens Healthcare GmbH, Erlangen, Germany). Table~\ref{tab:dataset} summarizes the \gls{mrn} sequence and acquisition properties.
 
 \begin{table}[htbp]
    \centering
@@ -32,7 +32,7 @@ Each MRN case consists of a low-resolution T2-weighted sequence with fat suppres
 
 \addtocounter{footnote}{-2}
 \stepcounter{footnote}\footnotetext{\label{fn:dims}Dimensions $z \times y \times x$ in axial, sagittal and coronal direction.}
-\stepcounter{footnote}\footnotetext{For most of the subjects, 35/52, a total of 60 axial slices were acquired. 6/52 and 5/52 contain only 33 and 40 axial slices respectively. The remaining 6/52 consist of 30 up to 59 axial slices.}
+\stepcounter{footnote}\footnotetext{The patient and volunteer subjects typically consist of 60 and 30 axial slices, respectively. There are some subjects which have fewer axial slices.}
 
 \begin{figure}[htbp]
 	\centering
@@ -53,12 +53,12 @@ Each MRN case consists of a low-resolution T2-weighted sequence with fat suppres
 		\label{fig:subfig:GT}
 		\includegraphics[width=4cm]{channel_GT}
 	}
-	\caption[Sections of MRN sequences]{Image sections of the sciatic nerve proximal to the knee, near the branching: \textbf{a)} Low-resolution T2-weighted image with fat suppression. \textbf{b)} High-resolution T2-weighted image without fat suppression. \textbf{c)} High-resolution T2-weighted image with annotated sciatic nerve.}
+	\caption[Sections of MRN sequences]{Axial image sections of the sciatic nerve proximal to the knee: \textbf{a)} Low-resolution T2-weighted image with fat suppression using \gls{ir}. \textbf{b)} High-resolution T2-weighted image without fat suppression. \textbf{c)} High-resolution T2-weighted image with annotated sciatic nerve. Note that the nerve has a similar appearance as blood vessels in the T2 image.}
 	\label{fig:sequences}  
 \end{figure}
 
 \subsubsection{Ground Truths} \label{dataset_gt}
-For each MRN case, three physicians, experienced in clinical, electrophysiological, and imaging-based assessment of neuromuscular diseases (Olivier Scheidegger (OS), senior neurologist and neuroradiologist > 14 years, Benedikt Wagner (BW), neuroradiologist > 4 years, Lorenz Grunder (LG), neuroradiologist > 2 years) manually segmented the sciatic nerve, including its distal branches the tibial and fibular nerve. The nerve segmentations were performed by each physician individually on the T2-weighted images, allowing the study of the inter-rater agreement. The segmentations were performed with the ITK-SNAP~\cite{py06nimg} software using the polygon or paintbrush tool. The descriptive statistics of the ground truth segmentations are summarized in Table~\ref{tab:ground_truths}. Figure~\ref{fig:gt_render} shows a 3D-rendering of a sciatic nerve, including the branching, based on the ground truth segmentation of OS.\\
+For each MRN case, three physicians, experienced in clinical, electrophysiological, and imaging-based assessment of neuromuscular diseases (Olivier Scheidegger (OS), senior neurologist and neuroradiologist > 14 years; Benedikt Wagner (BW), neuroradiologist > 4 years; Lorenz Grunder (LG), neuroradiologist > 2 years) manually segmented the sciatic nerve, including its distal branches the tibial and fibular nerve. The nerve segmentations were performed by each physician individually on the T2-weighted images, allowing the study of the inter-rater agreement. The segmentations were performed with the ITK-SNAP~\cite{py06nimg} software using the polygon or paintbrush tool. The descriptive statistics of the ground truth segmentations are summarized in Table~\ref{tab:ground_truths}. Important to point out is that the number of voxels belonging to the sciatic nerve only account for $0.14 \pm 0.05$ \% of the total image voxels. Figure~\ref{fig:gt_render} shows a 3D-rendering of a sciatic nerve, including the branching, based on the ground truth segmentation of OS.\\
 We obtained a consensus ground truth segmentation by the combination of the three expert ground truths via majority voting (GT in Table~\ref{tab:ground_truths}): A voxel was labelled sciatic nerve class if at least two rater segmented it. In our case the obtained consensus ground truth is identical to the result that one would have received by applying the \gls{staple} algorithm~\cite{Warfield2004SimultaneousSTAPLE}, which is a common algorithm for label fusing.\\
 
 \begin{figure}[htbp]
@@ -106,15 +106,15 @@ Seaborn\footnote{https://seaborn.pydata.org/} is a statistical data visualizatio
 LibreOffice Calc\footnote{https://www.libreoffice.org/} version 6.0.3.2 was used to create spreadsheets for the result tables.
 
 \subsection{Hardware}
-Training of the neural networks was done on the \gls{mia} group internal \gls{gpu} server. For most of the experiments, an NVIDIA Titan Xp had enough \gls{gpu} memory for successful training. More demanding experiments, however, were trained on a NVIDIA Quadro P6000. Data loading and transformation for data augmentation as well as the post-processing and the calculation of the evaluation metrics were done using the \gls{cpu}.
+Training of the neural networks was done on the \gls{mia} group internal \gls{gpu} server. Most of the networks were trained on an NVIDIA Titan Xp. More demanding experiments, however, were trained on a NVIDIA Quadro P6000. Pre-processing, data augmentation and the calculation of the evaluation metrics were done using the \gls{cpu}. Post-processing was done on a desktop PC with an Intel Core i7 3.2 GHz \gls{cpu}, 64 GB memory and running Ubuntu 16.04 LTS.
 \begin{table}[htbp]
    \centering
-   \caption{Hardware overview of the \gls{mia} group \gls{gpu} server.}
+   \caption{Hardware overview of the \gls{mia} group \gls{gpu} server. \# corresponds to the number of cores or the number available of the respective \gls{gpu} type.}
    \begin{tabular}{l*{3}{r}}
       \toprule
       Property & Hardware & Memory / Frequency & \# \\
       \midrule
-      \acrshort{cpu} & Intel(R) Xeon(R) CPU E5-2620 & 2.10 GHz& 32 \\
+      \acrshort{cpu} & Intel Xeon E5-2620 & 2.10 GHz & 32 \\
       \acrshort{ram} & & 64 GB & \\
       GPU & NVIDIA 1080 Ti & 11 GB & 1 \\
        & NVIDIA Titan Xp & 12 GB & 5 \\
@@ -261,7 +261,7 @@ The split of the dataset into three separate subsets with similar sample distrib
 As the size of our dataset (n = 52) is comparably small to other datasets we chose to validate our models via four-fold cross-validation, i.e. our models are trained on 39 subjects and evaluated on 13 subjects. We randomly assigned the patient subjects to the folds but with stratification regarding the volunteers. I.e. we ensured that the volunteers are equally distributed. The assignment of the subjects is summarized in the Table \ref{tab:fold_assignment}. We trained and tuned the neural networks only using the reported semi-random assignment. We did not use any other assignment to develop the method.
 
 \subsection{Metrics} \label{sec:eval_metrics}
-To measure and assess the performance of a neural network, evaluation metrics are required. The metrics are calculated by comparison of the segmentation mask (the output of a neural network) to the ground truth obtained by majority voting of the manual expert segmenations. Taha and Hanbury~\cite{Taha2015MetricsTool} analyzed popular metrics for 3D medical image segmentation and provided metric selection guidelines. Based on the guidelines, we choose the following evaluation metrics:
+To measure and assess the performance of a neural network, evaluation metrics are required. The metrics are calculated by comparison of the segmentation mask (the output of a neural network) to the ground truth obtained by majority voting of the manual expert segmenations. Taha and Hanbury~\cite{Taha2015MetricsTool} analyzed popular metrics for 3D medical image segmentation and provided metric selection guidelines. Based on the guidelines, we choose the following evaluation metrics, and report their mean and \gls{sd} in Chapter~\ref{chap:results}.
 
 \begin{itemize}
 \item \acrlong{dice}:
@@ -291,7 +291,6 @@ To measure and assess the performance of a neural network, evaluation metrics ar
   \item Comparison to publications.
   \end{itemize}
 \end{itemize}
-
 
 Let $S \in \{0, 1\}$ be the output segmentation mask of a model and $G \in \{0, 1\}$ be the ground truth.
 $S_{1}$ denotes the set of all voxels where $S = 1$, i.e., where the neural network detected the foreground. Analogously, $G_{1}$ denotes the set of all voxels where $G = 1$. The number of all voxels in a set $A$ is denoted by the cardinality operator $|A|$.
@@ -359,7 +358,7 @@ Our neural networks have smaller input dimensions than the typical size of the \
 
 
 \section{Experiments} \label{sec:experiments}
-We propose the following experiments to validate our hypothesis:
+We propose the following experiments to validate our hypothesis:\\
 
 \textit{Experiment 1:} We train and evaluate the baseline architecture on our \gls{mrn} images to investigate whether a deep learning-based approach for fully-automatic peripheral nerve segmentation is feasible.
 

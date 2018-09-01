@@ -1,4 +1,4 @@
-\chapter{Results}
+\chapter{Results} \label{chap:results}
 In this chapter, the obtained results from the defined experiments in section \ref{sec:experiments} are presented. In section \ref{sec:exp_feas} we summarized the results for the feasibility test of a deep-learning based peripheral nerve segmentation.
 Section \ref{sec:exp_3dcontext} presents the achieved performances for the defined segmentation metrics for the different neural network architectures with variable access to 3D information.
 In section \ref{sec:exp_pp} the results for the impact-study of post-processing applied to the segmentation of the baseline architecture and the best performing 3D architecture, respectively.
@@ -36,7 +36,7 @@ We successfully trained the baseline architecture on the \gls{mrn} images. In or
 \end{figure}
 
 \section{Experiment 2: 3D Context} \label{sec:exp_3dcontext} % ==================================================
-We successfully trained the neural networks with the proposed architectures, which allows them for more \gls{3d} context incorporation. The mean and \gls{sd} for the \acrlong{dice}, \acrlong{vs} and \acrlong{hd95} are summarized in the Table~\ref{tab:results_3d_context_small} together with the baseline results. The complete Table~\ref{tab:results_3d_context}, also featuring the \acrlong{avd} and \acrlong{hd}, can be found in the appendix. A boxplot for the \acrlong{dice} is shown in Figure~\ref{fig:results_boxplot_dice}. Figure~\ref{fig:results_heatmap_dice} features a heatmap, listing all the achieved \acrlong{dice} values on the patients and volunteers for all neural network architectures. Training took 15 and 22 hours on a NVIDIA Titan Xp for the stack-wise and patch-wise, respectively.
+We successfully trained the neural networks with the proposed architectures, which allows them for more \gls{3d} context incorporation. The mean and \gls{sd} for the \acrlong{dice}, \acrlong{vs} and \acrlong{hd95} are summarized in the Table~\ref{tab:results_3d_context_small} together with the baseline results. The complete Table~\ref{tab:results_3d_context}, also featuring the \acrlong{avd} and \acrlong{hd}, can be found in the appendix. A boxplot for the \acrlong{dice} is shown in Figure~\ref{fig:results_boxplot_dice}. Figure~\ref{fig:results_heatmap_dice} features a heatmap, listing all the achieved \acrlong{dice} values on the patients and volunteers for all neural network architectures. Training took 15 and 22 hours on a NVIDIA Titan Xp for the stack-wise and patch-wise neural networks, respectively.
 
 \begin{table}[htbp]
    \centering
@@ -74,17 +74,38 @@ We successfully trained the neural networks with the proposed architectures, whi
 \begin{figure}[htbp]	
 	\centering
 	\includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{heat_dice}
-    \caption[Heatmap for the \acrlong{dice} of the different Architectures]{Heatmap for the \acrlong{dice} for the different neural network architectures.}
+    \caption[Heatmap for the \acrlong{dice} of the different Architectures]{Heatmap for the achieved \acrlong{dice}s of the different neural network architectures.}
     \label{fig:results_heatmap_dice}
 \end{figure}
 
 
 \section{Experiment 3: Post-processing} \label{sec:exp_pp} % ====================================================
-Table~\ref{tab:results_pp_small} presents the obtained results with respect to the \acrlong{dice}, \acrlong{vs} and \acrlong{hd95} metrics. The complete Table~\ref{tab:results_pp} can be found in the appendix. Figure~\ref{fig:pp_boxplots_hd95} shows the baseline and stack-wise architecture boxplot for the \acrlong{hd95}. The boxplots regarding the other metrics (Figures~\ref{fig:pp_boxplots_vs} to \ref{fig:pp_boxplots_hd}) are also situated in the appendix.
+Table~\ref{tab:results_pp_small} presents the obtained results with respect to the \acrlong{dice}, \acrlong{vs} and \acrlong{hd95} metrics. The complete Table~\ref{tab:results_pp} can be found in the appendix. Figure~\ref{fig:pp_boxplots_hd95} shows the baseline and stack-wise architecture boxplot for the \acrlong{hd95}. The boxplots regarding the other metrics (Figures~\ref{fig:pp_boxplots_vs} to \ref{fig:pp_boxplots_hd}) are also situated in the appendix. We only show the boxplots for the \gls{hd95} here because the overlap-based metrics are not influenced to much by the post-procssing.
+Post-processing was done on a desktop PC with a 6-core Intel i7 processor, and took 3 minutes for keeping the $n$ largest volumes only (\textit{Volumes only}) for all 52 subjects. The number of volumes to keep was tuned for both architectures, resulting in $n = 3$ and $n = 2$ volumes for the baseline and stack-wise architecture, respectively. Joining the volumes and then keeping only the largest one (\textit{Joint volumes}) took one hour to process for all 52 subjects.
+
+
+
+\begin{figure}[htbp]
+	\centering
+	\subfloat[]
+	{
+		\label{fig:subfig:pp_base_219}
+		\includegraphics[width=\textwidth]{pp_base_219}
+	}
+	\hfill
+	\subfloat[]
+	{
+		\label{fig:subfig:pp_5to1_219}
+		\includegraphics[width=\textwidth]{pp_5to1_219}
+	}
+	\caption[Post-processing impact on Base and Stack]{\gls{3d} segmentation renderings of a patient's sciatic nerve. \textbf{a)} Output segmentation of the baseline without post-processing (left), with $n$ largest volumes only (center) and with full post-processing (right). \textbf{b)} Output segmentation of the best performing stack-wise architecture without post-processing (left), with $n$ largest volumes only (center) and with full post-processing (right).}
+	\label{fig:pp_patient_219}  
+\end{figure}
+
 
 \begin{table}[htbp]
    \centering
-   \caption[Segmentation Evaluation Metrics for the different Architectures]{Values for the \acrlong{dice}, \acrlong{vs} and \acrlong{hd95} for the baseline and stack architecture. \textit{Volumes only} means that only the $n$ largest volumes were kept ($n = 3$ and $n = 2$ for the base and Stack\_5to1 architecture, respectively). \textit{Joint volumes} means that we tried to connect the correctly segmented volumes first, and then only kept the largest one.}
+   \caption[Segmentation Evaluation Metrics for the different Architectures]{Values for the \acrlong{dice}, \acrlong{vs} and \acrlong{hd95} for the baseline and stack architecture. \textit{Volumes only} means that only the $n$ largest volumes were kept ($n = 3$ and $n = 2$ for the Base and Stack\_5to1 architecture, respectively). \textit{Joint volumes} means that we tried to connect the correctly segmented volumes first, and then only kept the largest one.}
    \begin{tabular}{l*{7}{l}}
       \toprule
       Cohort	& Network	& Post-processing	& DICE				& VS				& HD95\\
@@ -132,11 +153,41 @@ Table~\ref{tab:results_pp_small} presents the obtained results with respect to t
 
 
 \section{Evaluation} \label{sec:exp_evaluation} % ===============================================================
+In Figure~\ref{fig:res_inter_rater} the inter-rater variability is shown for all the rater-rater combinations and metrics. Table~\ref{tab:results_durations} contains all the different times required for the individual steps involved in the peripheral nerve segmentation.
+
 \begin{figure}[htbp]	
 	\includegraphics[width=\textwidth]{inter_rater}
-    \caption[Inter-Rater Agreement]{Inter-rater agreement for the DICE, VS, AVD, HD95 and HD metrics. Values close to 1.00 for DICE and VS correspond to a high level of agreement between the raters. Conversely, low values for AVD, HD95 and HD imply higher level agreement.}
+    \caption[Inter-Rater Agreement]{Inter-rater agreement for the \acrlong{dice}, \acrlong{vs}, \acrlong{avd}, \acrlong{hd95} and \acrlong{hd} per cohort. Values close to 1.00 for \gls{dice} and \gls{vs} correspond to a high level of agreement between the raters. Conversely, low values for \gls{avd}, \gls{hd95} and \gls{hd} imply higher agreement.}
     \label{fig:res_inter_rater}
 \end{figure}
+
+
+\begin{table}[htbp]
+   \centering
+   \caption[Time Requirements]{Time requirements for the different steps involved in the peripheral nerver segmentation. All the durations for pre-processing, evaluation and post-processing are given as the time required to process a single \gls{mrn} case.}
+   \begin{tabular}{l*{6}{l}}
+      \toprule
+      Phase	        & Step                  & Variant               & Duration\\
+      \midrule
+      Training      & Training              & Base                  & 2 h   \\
+                    &                       & Stack (all)           & 15 h  \\
+                    &                       & Patch                 & 22 h  \\
+      \midrule
+      Pre-processing& Registration          &                       & $1 \pm 0.5$ m \\
+      \midrule
+      Evaluation    & Segmentation          &                       & 3 s \\
+                    & Post-processing       & $n$ largest volumes   & 4 s \\
+                    &                       & Joint volumes         & 1 m \\
+      \midrule
+      Fully automatic segmentation & & & 2 $\pm$ 0.5 m\\
+      (After training, full Post-processing)\\
+      \midrule
+      Manual ground truth segmentation & & & $24 \pm 8$ m\\
+      (done by expert) \\
+      \bottomrule
+   \end{tabular}
+   \label{tab:results_durations}
+\end{table}
 
 
 

@@ -1,14 +1,20 @@
 \chapter{Discussion and Conclusions}
+This chapter provides a discussion in Section~\ref{disc:discussion} on the obtained results from Chapter~\ref{chap:results} for the conducted experiments. After the discussion a conclusion on the outcome of this thesis is given in Section~\ref{disc:conclusions}.
 
-\section{Discussion}
+\section{Discussion} \label{disc:discussion}
 \subsection{Experiment 1: Feasibility}
+We successfully trained the baseline architecture on the \gls{mrn} images, achieving a \acrlong{dice} of $0.704 \pm 0.139$ and $0.861 \pm 0.057$ for the patient and volunteer cohort, respectively. These results are already better than the results reported by Balsiger et al. \cite{Balsiger2016DevelopmentApproaches} with the Random Forest approach and are in accordance to the results they recently published \cite{BalsigerContext-awareNeurography} with their deep learning approach based on the Fully Convolutional DenseNet architecture~\cite{Jegou2017TheSegmentation}. Hence a deep-learning based approach for the peripheral nerve segmentation is feasible.
+A comparison of the achieved values for the metrics makes it evident that the network generally performs better on the volunteer cohort. We suspect that the main reason for this discrepancy is the higher variability in the clinically acquired patient images. While the \gls{mrn} images for the volunteers were all taken from the same anatomical location, the images of the patients originate from variable locations between the distal thigh up to the head of the femur. The patient \gls{mrn} images also tend to have more movement artefacts, which makes the registration during pre-processing more complex.
+Training the baseline architecture on each of the \gls{mrn} images separately resulted in different outcomes. The baseline trained on the T2 images only was able to perform almost as good as when trained on both channels. Trained only on the IR images, however, resulted in lower values for the \acrlong{dice} and a higher \acrlong{hd95}. It seems that the neural network is not able to learn the same quality of features to extract the same amount of information out of the IR images. We assume that the main reason for this is that the unprocessed IR images have a lower in-plane resolution and are interpolated during pre-processing.
+Furthermore, we suspect that the registration may be another issue: A subject-level investigation showed that there some cases where registration is of low quality, hence there is misalignment between the IR and T2 images. The physicians used the T2 images for their ground truth segmentation. Consequently, the IR images are also misaligned to the ground truths, resulting in less consistency. This makes it more complicated for the neural network to learn useful features for the IR images than for the T2 images.
+
+
+
+
+
 \subsection{Experiment 2: Impact of 3D context}
 \subsection{Experiment 3: Impact of Post-processing}
 \subsection{Experiment 4: Comparison: FCNN and Raters}
-\section{Conclusions}
-\subsection{Experiment 1: Feasibility}
-\subsection{Experiment 2: Impact of 3D context}
-\subsection{Experiment 3: Impact of Post-processing}
-\subsection{Experiment 4: Comparison: FCNN and Raters}
+\section{Conclusions} \label{disc:conclusions}
 
 \endinput
