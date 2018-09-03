@@ -1,20 +1,20 @@
-\chapter{Introduction}
-Our nervous system is divided into two parts: The \gls{cns}, which consists of the brain and the spinal cord, and the \gls{pns} which includes all of the nerves that branch out from the brain and spinal cord into the most distal areas of our body. Furthermore the \gls{pns} is split into the \gls{sns}, responsible for sensory input and motor output, and the \gls{ans} which controls involuntary responses to regulate physiological functions. Peripheral neuropathies are common and can result in deficiencies or restrictions of sensory or motor abilities.\\
+\chapter{Introduction} % =================================================================================
+Our nervous system is divided into two parts: The \gls{cns}, which consists of the brain and the spinal cord, and the \gls{pns} which includes all of the nerves that branch out from the brain and spinal cord into the most distal areas of our body. Peripheral neuropathies are common and can result in deficiencies or restrictions of sensory or motor abilities.\\
 Diagnosis and assessment of peripheral neuropathies traditionally rely on neurological examinations which might provide inconclusive results, or are not amenable to deeply situated peripheral nerves. Recently the use of \gls{mri}, tailored to the peripheral nerves, called \gls{mrn} as a complementary diagnostic tool has gained popularity. A problem, however, is the fact that as of today \gls{mrn} is a qualitative examination as it is subjectively assessed by the radiologist. The use of \gls{mrn} images to extract potential quantitative biomarkers, such as cross-sectional area and nerve compartment volume ration have been proposed. However, a prerequisite for calculation of such biomarkers is the segmentation of the \gls{pns}, which comes in with expensive and tedious work for a radiologist.\\
-For this reason, we aim to extract the nerves of the \gls{pns} automatically from \gls{mrn} images, using a deep-learning-based approach.
+For this reason, we aim to extract the nerves of the \gls{pns} automatically from \gls{mrn} images, using a deep-learning-based approach. This introductory chapter starts with the medical motivation, including an anatomical overview of the \gls{pns}, a listing of peripheral neuropathies and the current state-of-the-art of diagnosis in Section~\ref{sec:intro_medical}. Section~\ref{sec:intro_mia} provides a short outline of medical image analysis and the segmentation problem. Section~\ref{sec:intro_mlearn} introduces some topics of machine learning. Finally, the chapter is concluded by the elaboration of our hypothesis, and the aim and structure of this thesis.
 
-
-
-
-\section{Medical Motivation}
-
+\section{Medical Motivation} \label{sec:intro_medical} % ===========================================================================
 \subsection{Anatomy}
+As previously mentioned, our nervous system is divided into two parts: The \gls{cns}, including the brain and the spinal cord, and the \gls{pns} which comprises all of the nerves that branch out from the brain and spinal cord into the most distal areas of our body. In general, the \gls{pns} connects the \gls{cns} to all parts of the body. Both, the \gls{pns} and the \gls{cns} consist of efferent nerves which transmit signals from the brain to the effectors, i.e., muscles and glands, of the different body parts, and afferent nerves which transmit signals from the receptors to the brain. The \gls{pns} is split into the \gls{sns}, responsible for sensory input and motor output, and the \gls{ans} which controls involuntary responses to regulate physiological functions. Furthermore, the \gls{ans} divides into the sympathetic and the parasympathetic divisions, which act antagonistically: While the sympathetic division is responsible for "flight-or-fight" functions (e.g. increasing of heart-rate and lung action, inhibition of stomach and intestinal function), the parasympathetic division promotes the "rest-and-digest" functions (e.g. body relaxes, buildup of reserves) of the body.\\
+Figure~\ref{fig:subfig:anat_spinal} depicts how the \gls{pns} is connected to the \gls{cns}: Nerve rootlets, which are groups of axons, form a spinal nerve. Nerve rootlets, leaving the spinal cord ventral, belong typically to motor nerves. Nerve rootlets belonging to sensory nerves typically enter the spinal cord dorsal.\\
+Figure~\ref{fig:subfig:anat_nerve} shows the cable-like structure of peripheral nerves. Each nerve contains many axons, are also called nerve fibers, which are hierarchically bundled together. Groups of nerve fibers are surrounded by the first layer of connective tissue called endoneurium. Multiple groups of surrounded nerve fibers bundled together, and surrounded by another layer of connective tissue called perineurium, form a fascicle. Multiple fascicles, but also blood vessels, surrounded by a final layer of connective tissue called epineurium, form a peripheral nerve. The blood vessels supply the nutrients. The nerves fibers can be myelinated or unmyelinated. Myelination acts as an insulator and increases the transmission velocity of neura signals.\\
+Figures~\ref{fig:subfig:anat_sagittal} and \ref{fig:anat_axial} show the main nerves of the \gls{pns} of the lower limb, and a cross-sectional view of the right upper leg including the \gls{n.} ischiadicus. We chose to depict the nerves of the lower limb only. Our \gls{mrn} images we work with, are all taken from the anatomical region of the thigh and, therefore, include parts of \gls{n.} ischiadicus, and typically the branching where it splits into \gls{n.} tibials and \gls{n.} fibularis, proximal to the knee. This is mentioned in detail in Section~\ref{sec:materials} of Chapter~\ref{chap:methods}. After this anatomical section we will refer to \gls{n.} ischiadicus by its english name \textit{sciatic nerve}.
 
 \begin{figure}[htbp]
     \begin{minipage}[c][0.9\textheight][t]{.5\textwidth}
         \centering
         \vspace*{\fill}
-        \subfloat[The PNS of the upper extremity.]
+        \subfloat[]
         {
             \includegraphics[width=\linewidth]{anat_sagittal}
             \label{fig:subfig:anat_sagittal}
@@ -23,37 +23,40 @@ For this reason, we aim to extract the nerves of the \gls{pns} automatically fro
     \begin{minipage}[c][0.9\textheight][t]{.5\textwidth}
         \centering
         \vspace*{\fill}
-        \subfloat[Cross-section of the right upper arm (proximal view).]
+        \subfloat[]
         {
             \includegraphics[width=\linewidth]{anat_spinal}
             \label{fig:subfig:anat_spinal}
         }
         \vfill
-        \subfloat[Cross-section of the right lower arm (proximal view).]
+        \subfloat[]
         {
             \includegraphics[width=\linewidth]{anat_nerve}
             \label{fig:subfig:anat_nerve}
         }
     \end{minipage}
     \vspace*{-0.3cm}
-    \caption[Anatomy of the Peripheral Nervous System of the Lower Extremity]{\textbf{a)} Figure~C p.~537 from~\cite{Schunke2014PrometheusAnatomie}. \textbf{b)} Figure~B p. 384 and \textbf{c)} Figure~D p. 265 from~\cite{Schunke2015THIEMEAnatomy}.}
+    \caption[Anatomy of the Peripheral Nervous System]{The anatomy of the \gls{pns} on different scales. \textbf{(a)} Nerves of the \gls{pns} of the lower limb, including \gls{n.} ischiadicus. \gls{n.} ischiadicus splits into \gls{n.} tibialis and \gls{n.} fibularis proximal to the knee. Image from~\cite{Schunke2014PrometheusAnatomie}. \textbf{(b)} Sensory nerves entering the spinal cord dorsal, motor nerves exiting the spinal cord ventral. Image from~\cite{Schunke2015THIEMEAnatomy} \textbf{(c)} Structure of a peripheral nerve. Image from~\cite{Schunke2015THIEMEAnatomy}.}
     \label{fig:anat}
 \end{figure}
 
 \begin{figure}[htbp]
 	\includegraphics[width=\textwidth]{anat_axial}
-    \caption[Cross-section of the Right Upper Leg]{Figure~A p. 528 from~\cite{Schunke2014PrometheusAnatomie}}
+    \caption[Cross-section of the Right Upper Leg]{Cross-sectional view of the right upper leg with femur, muscles, blood vessels and \gls{n.} ischiadicus. Image from~\cite{Schunke2014PrometheusAnatomie}.}
     \label{fig:anat_axial}
 \end{figure}
 
 \subsection{Peripheral Neuropathies}
+The prevalence of peripheral neuropathies is approximatively 2.4 \% and rising to 8.0 \% with the age $\geq$ 55 years \cite{Martyn1997EpidemiologyNeuropathy}. The most common cause of peripheral neuropathies in the developed world is diabetes mellitus. Other causes include metabolic disorders, infections, toxins, and drugs \cite{England2004PeripheralNeuropathy,Hughes466}.
+Peripheral neuropathies can be caused by the damage of the axons or by demyelination which hinders the fast transmission of neural signals. 
+As the \gls{ans} controls almost every organ, a wide range of symptoms can arise when it is damaged. Damage to motor nerves may give rise to movement impairment or muscle weakness. Damage to sensory nerves can be the cause of pain or altered sensation.
 
 \subsection{State-of-the-Art Diagnosis}
 
-\section{Medical Image Segmentation}
+\section{Medical Image Segmentation} \label{sec:intro_mia} % ===================================================================
 
-\section{Machine Learning}
-In this part we brielfy describe some fundamentals for machine learning. Section~\ref{sec:ml_supervised} introduces the topic of supervised learning on an example.
+\section{Machine Learning} \label{sec:intro_mlearn} % =============================================================================
+In this part we briefly describe some fundamentals of machine learning. Machine learning is a huge topic and this section is by no means meant to be a complete overview. We only rather introduce some concepts and mention topics which were related and important for our work.
 
 \subsection{Supervised Learning} \label{sec:ml_supervised}
 The principle of supervised learning is illustrated on the prediction of house prizes as a function of their living area in Figure~\ref{fig:dl_supervised} taken from~\cite{Ng2012StanfordNotes}. In supervised learning, we train an algorithm (or also called model) by showing the algorithm input-output pairs (e.g., living area of houses versus their corresponding prizes). This is referred to as the training phase, and the input-output pairs are called the training set. The outputs are typically referred to as labels or targets. More formally we define the training set as
@@ -166,19 +169,14 @@ A typical \gls{cnn} is built as a sequence of multiples of the following layers~
     \label{fig:mlearn_weights}
 \end{figure}
 
-\subsubsection{Convolutional Layer}
-\subsubsection{Pooling Layer}
-\subsubsection{Normalization Layer}
-\subsubsection{Fully-Connected Layer}
 
 
-
-\section{Related Work}
-\section{Hypothesis}
+\section{Related Work} % =================================================================================
+\section{Hypothesis} % ===================================================================================
 
 \textit{Deep-learning-based segmentation of peripheral nerves from \gls{mrn} images is possible.} \\
 \textit{3D-Contextual information allows for better segmentation results.}
 
-\section{Aim \& Structure of the Thesis}
+\section{Aim \& Structure of the Thesis} % ===============================================================
 
 \endinput
