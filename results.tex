@@ -114,16 +114,16 @@ Post-processing was done on a desktop PC with a 6-core Intel i7 processor, and t
       Patient   & Base 	& None & $0.705 \pm 0.137$ & $\mathbf{0.883 \pm 0.097}$ & $16.285 \pm 16.896$\\
                 &                	& Volumes only  & $0.711 \pm 0.145$ & $0.867 \pm 0.125$ & $20.364 \pm 20.125$\\
                 &                	& Joint volumes & $\mathbf{0.722 \pm 0.136}$ & $0.873 \pm 0.125$ & $\mathbf{11.812 \pm 12.785}$\\
-      \midrule
-      Patient   & Stack\_5to1 	& None & $0.765 \pm 0.123$ & $0.898 \pm 0.110$ & $12.418 \pm 19.104$\\
+      \cmidrule{2-6}
+                & Stack\_5to1 	& None & $0.765 \pm 0.123$ & $0.898 \pm 0.110$ & $12.418 \pm 19.104$\\
                 &                	& Volumes only  & $0.772 \pm 0.120$ & $0.899 \pm 0.119$ & $11.481 \pm 16.706$\\
                 &                	& Joint volumes      & $\mathbf{0.779 \pm 0.123}$ & $\mathbf{0.905 \pm 0.117}$ & $\mathbf{6.688  \pm 10.332}$\\
       \midrule
       Volunteer & Base 	& None & $0.861 \pm 0.057$ & $0.921 \pm 0.056$ & $1.644  \pm 2.321 $\\
                 &                	& Volumes only  & $0.862 \pm 0.057$ & $0.924 \pm 0.056$ & $2.311  \pm 4.508 $\\
                 &                	& Joint volumes      & $\mathbf{0.868 \pm 0.050}$ & $\mathbf{0.929 \pm 0.056}$ & $\mathbf{1.230  \pm 1.255}$\\
-      \midrule
-      Volunteer & Stack\_5to1 	& None & $0.884 \pm 0.046$ & $0.927 \pm 0.051$ & $1.140  \pm 1.344 $\\
+      \cmidrule{2-6}
+                & Stack\_5to1 	& None & $0.884 \pm 0.046$ & $0.927 \pm 0.051$ & $1.140  \pm 1.344 $\\
                 &                	& Volumes only  & $0.883 \pm 0.046$ & $0.933 \pm 0.049$ & $1.357  \pm 1.454 $\\
                 &                	& Joint volumes      & $\mathbf{0.894 \pm 0.042}$ & $\mathbf{0.942 \pm 0.050}$ & $\mathbf{0.655  \pm 0.355}$\\
       \bottomrule
@@ -153,7 +153,7 @@ Post-processing was done on a desktop PC with a 6-core Intel i7 processor, and t
 
 
 \section{Evaluation} \label{sec:exp_evaluation} % ===============================================================
-In Figure~\ref{fig:res_inter_rater} the inter-rater variability is shown for all the rater-rater combinations and metrics. Table~\ref{tab:results_durations} contains all the different times required for the individual steps involved in the peripheral nerve segmentation.
+In Figure~\ref{fig:res_inter_rater} the inter-rater agreement is shown for all the rater-rater and rater-gt (consensus ground truth) combinations. Table~\ref{tab:results_durations} contains all the different times required for the individual steps involved in the peripheral nerve segmentation.
 
 \begin{figure}[htbp]	
 	\includegraphics[width=\textwidth]{inter_rater}

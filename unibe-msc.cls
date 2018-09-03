@@ -102,9 +102,9 @@
     \Large\mdseries\thesubtitle\par
     \vskip2cm
     \huge\bfseries\thetitle\par
-    \vskip2cm
+    \vskip1cm
     \large\mdseries by
-    \vskip2cm
+    \vskip1cm
     \LARGE\bfseries\theauthor\par\vfill
     \vskip1cm
     \large\mdseries of \theorigin
