@@ -16,26 +16,17 @@ We consistently achieved the best results concerning the \acrlong{dice} and \acr
 Both stack-based 5-to-3 architectures (Stack\_5to3 and Stack\_Proj) did perform worse, especially on the patient cohort. Therefore, for the segmentation of our \gls{mrn} images, predicting multiple slices at once does not bring any benefit. Performance could potentially be increased, by reducing the axial stride from three down to one, resulting in each slice being predicted three times. The predictions could then be averaged for the segmentation.
 Training the stack-based 5-to-3 architecture with the projection loss resulted in almost the same performances as the same architecture with the regular loss function, except for the \acrlong{avd}, which was nearly twice as large, in case of the volunteer cohort. An investigation of the volunteer \gls{mrn} cases revealed that there are more false positive outliers present in the segmentations of the projection-based loss.\\
 The patch-based network performed the worst with regards to all metrics, even when compared to the baseline architecture. Despite having access to the \gls{3d} information of 12 consecutive slices, the reduction of the accessible in-plane information seems to restrict the neural network drastically in its segmentation capabilities. This emphasizes the importance of the \gls{2d} context and speaks for robust and global \gls{2d} features. However, we suspect a problem our patch-based approach may be the fact that we do \textit{same}-padding and predict the same dimensions as the input. We think that \textit{valid}-padding and consequently predicting a smaller region should produce better results.\\
+Looking at the heatmap of the achieved \gls{dice} in Figure~\ref{fig:results_heatmap_dice}, three things become evident: first, all the architectures perform better on the volunteer cohort. We already observed this in the previous experiment, and \gls{3d} context does not change this. Second, the subjects where low performances are achieved, predominantly patients, are generally the same for all architectures. Hence, there are subjects which are inherently hard for all architectures to segment with high accuracy. Third, most of these subjects are patient subjects which have been examined and enrolled in an earlier stage in the registry. In some of these subjects, patient movement artifacts are noticeable. This could mean that the \gls{mrn} imaging protocol in the earlier stages was not optimal, and then subsequently got adjusted. Assessment of these subjects in the form of an outlier-analysis could be advisable.\\
 As a consequence of the intrinsics of our \gls{mrn} images, information which helps a robust segmentation is mostly available and extracted from the \gls{2d} context, hence from the individual slices of a \gls{mrn} image. This allows for already remarkable and quite robust segmentation performances of a simple, \gls{2d} based neural network as the baseline. However, we found that introducing some \gls{3d} convolutional layers can increase the performances to a certain extent. \\
 Furthermore, we found that architectural changes as the number of features and number of input slices play a secondary role. More important is the general architecture, which has to adequate for the problem and the given data: in our case, a good mix between \gls{2d} and \gls{3d} convolutions, and a more \gls{2d} dominantly driven approach was the solution. This, given the intrinsic parameters of our \gls{mrn} images, intuitively makes sense and is also in accordance with the results of Baumgartner et al.~\cite{Baumgartner2017AnSegmentation}.\\
 We, therefore, conclude, that \gls{3d} context allows for better segmentation performance, given the right circumstances.
 
-
--Fälle welche sehr schwierig sind:
--->Vermeht patients, Früh im Zeitpunkt der Aufnahme
--->Evtl zu schlechte qualität --> Outlier analyse von oli evtl notwendig
-
-
-
-
 \subsection{Experiment 3: Post-processing}
-- Bringts generell
-- Unterschiedlich für die metriken Overlap vs Distance
-- 2D und 3d profitieren unteschiedlich
-- Problem mit branching
-- 1 stunde zum bererchenn
--Centerline ist toll
-
+We successfully applied our different degrees of post-processing to the outputs of the baseline and stack-based 5-to-1 architectures. For both cohorts, joining the volumes and subsequently removing of all but the largest volumes (referred to as \textit{joint volumes} post-processing) yields the best segmentation performances with regard to all metrics. The single exception is the patient \acrlong{vs} of the baseline architecture, where no post-processing results in a higher value.
+The impact of post-processing on the distance metrics \gls{avd}, \gls{hd95} and \gls{hd} is far more dominant than on the overlap-based metrics, i.e., \gls{dice} and \gls{vs}. Inspection of the segmentation reveals that most of the false positive outliers can be removed by our post-processing, resulting in the significant drops of the distance metrics. 
+Concerning the \acrlong{hd95}, our post-processing benefits the stack-based 5-to-1 architecture even more than the baseline: the \gls{hd95} is reduced by approximately 45 \% for the stack-based approach, and reduced by about 25 \% for the baseline.
+A limitation of our post-processing method is the calculation of the cheapest way for the volume connection: we only calculate one path (we only take the cheapest of all paths). This is applicable and fine for the cases which do not include the branching of the sciatic nerve. For the cases which include the branching, a better way would be to calculate two paths: both would start proximal in the sciatic nerve, and then after the branching follow the tibial and fibular nerve, respectively.
+Furthermore, calculating the cheapest paths corresponds to find the centerline of the nerves. We could extend the post-processing to result in an additional map which containing the pixels belonging to the cheapest paths and therefore designating the centerlines of the nerves.
 
 \subsection{Comparison to Human Inter-Rater Performance}
 - Oli ist der beste rater da er am meisten CGT übereinstimmt
