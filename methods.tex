@@ -354,7 +354,8 @@ where $d_{AH}(S,G)$ is the directed average \gls{hd} that is given by
 \end{equation}
 
 \subsection{Baseline} \label{sec:eval_baseline}
-We compare and evaluate the performance of our method to the consensus ground truth GT and to the inter-rater variability, which serves us as a final performance baseline. We obtain the inter-rater variability by calculating our evaluation metrics for each rater-rater pair using the corresponding ground truth segmentation. Hence, the inter-rater variability for each metric consists of $n = 126$ and $n = 30$ for the patient and volunteer cohort, respectively.
+We compare and evaluate the performance of our method to the consensus ground truth GT and to the inter-rater variability, which serves us as a final performance baseline. We obtain the inter-rater variability by calculating our evaluation metrics for each rater-rater pair using the corresponding ground truth segmentation. Hence, the inter-rater variability for each metric consists of $n = 126$ and $n = 30$ for the patient and volunteer cohort, respectively.\\
+We hypothesize that there is no statistically significant difference between the performance of our method and the inter-rater performance. Due to the different sample sizes and the non-normal sample distributions, we use an unpaired Mann-Whitney U test~\cite{Mann1947OnOther} with a significance level of 0.05 (95 \% confidence interval) to confirm the hypothesis.
 
 \section{Experiments} \label{sec:experiments}
 We propose the following experiments to validate our hypothesis:\\

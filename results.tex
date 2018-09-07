@@ -147,7 +147,7 @@ We applied the developed post-processing to the baseline and stack-based (5 to 1
 
 \section{Comparison to Human Inter-Rater Performance} \label{sec:exp_evaluation} % ===============================================================
 We compared the best performing architecture to the inter-rater agreement. The best performing architecture is the Stack-wise 5to1 with the \textit{joint volumes} post-processing (FCNN-GT; $n = 52$). The inter-rater agreement was obtained as described in Section~\ref{sec:eval_baseline} (R-R; $n = 156$).
-Table~\ref{tab:res_fcnn_rater_small} summarizes the achieved \acrlong{dice}, \acrlong{vs}, and \acrlong{hd95}. 
+Table~\ref{tab:res_fcnn_rater_small} summarizes the achieved \acrlong{dice}, \acrlong{vs}, and \acrlong{hd95}. Our proposed method achieves higher \gls{dice} values than the inter-rater performance. The $p$-values and the statistical significance of the comparison are gathered in the Table~\ref{tab:res_fcnn_rater_statistics}. Only for the volunteer \gls{dice} score, the difference is statistically significant. Hence, from a statistical point of view, our method is on par with the human inter-rater performance, or even surpassing it in the case of the \acrlong{dice} for the volunteer cohort.
 Figure~\ref{fig:results_eval_boxplot_dice} shows the corresponding boxplot of the \acrlong{dice}. A detailed table (Table~\ref{tab:res_fcnn_rater}) and additional figures  are presented in the appendix.
 In Figure~\ref{fig:res_inter_rater} the inter-rater agreement is shown as a heatmap for all the rater-to-rater and rater-to-ground-truth combinations.
 
@@ -167,6 +167,31 @@ In Figure~\ref{fig:res_inter_rater} the inter-rater agreement is shown as a heat
       \bottomrule
    \end{tabular}
    \label{tab:res_fcnn_rater_small}
+\end{table}
+
+
+\begin{table}[htbp]
+   \centering
+   \caption[Statistics for Comparison to Inter-Rater Performance]{Statistical significance and $p$-values for the conducted unpaired Mann-Whitney U test (95 \% confidence interval) for the comparison to human inter-rater performance.}
+   \begin{tabular}{l*{3}{l}}
+      \toprule
+        Cohort	    & Metric        & $p$       & Statistically significant\\
+      			    &               &           &($p < 0.05$)          \\
+      \midrule
+        Patient     & \gls{dice}    & 0.60      & No\\
+                    & \gls{vs}      & 0.60      & No\\
+                    & \gls{avd}     & 0.31      & No\\
+                    & \gls{hd95}    & 0.54      & No\\
+                    & \gls{hd}      & 0.29      & No\\
+        \midrule
+        Volunteer   & \gls{dice}    & 0.02      & Yes\\
+                    & \gls{vs}      & 0.65      & No\\
+                    & \gls{avd}     & 0.70      & No\\
+                    & \gls{hd95}    & 0.48      & No\\
+                    & \gls{hd}      & 0.18      & No\\
+      \bottomrule
+   \end{tabular}
+   \label{tab:res_fcnn_rater_statistics}
 \end{table}
 
 \begin{figure}[htbp]
