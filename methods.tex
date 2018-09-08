@@ -57,36 +57,14 @@ Each MRN case consists of a low-resolution T2-weighted sequence with fat suppres
 \end{figure}
 
 \subsubsection{Manual Ground Truth Segmentation} \label{dataset_gt}
-For each MRN case, three physicians, experienced in clinical, electrophysiological, and imaging-based assessment of neuromuscular diseases (Olivier Scheidegger (OS), senior neurologist and neuroradiologist > 14 years; Benedikt Wagner (BW), neuroradiologist > 4 years; Lorenz Grunder (LG), neuroradiologist > 2 years) manually segmented the sciatic nerve, including its distal branches the tibial and fibular nerve. The nerve segmentations were performed by each physician individually on the T2-weighted images, allowing the study of the inter-rater agreement. The segmentations were performed with the ITK-SNAP~\cite{py06nimg} software using the polygon or paintbrush tool. The descriptive statistics of the ground truth segmentations are summarized in Table~\ref{tab:ground_truths}. Important to point out is that the number of voxels belonging to the sciatic nerve only account for $0.14 \pm 0.05$ \% of the total image voxels. Figure~\ref{fig:gt_render} shows a \gls{3d} rendering of a sciatic nerve, including the branching, based on the ground truth segmentation of OS.\\
-We obtained a consensus ground truth segmentation, from now on referred to as GT, by the combination of the three expert ground truths via majority voting (GT in Table~\ref{tab:ground_truths}): A voxel was labelled sciatic nerve if at least two rater segmented it. In our case the obtained consensus ground truth is identical to the result that one would have received by applying the \gls{staple} algorithm~\cite{Warfield2004SimultaneousSTAPLE}, which is a common algorithm for label fusion.\\
+For each MRN case, three physicians, experienced in clinical, electrophysiological, and imaging-based assessment of neuromuscular diseases (Olivier Scheidegger (OS), senior neurologist and neuroradiologist > 14 years; Benedikt Wagner (BW), neuroradiologist > 4 years; Lorenz Grunder (LG), neuroradiologist > 2 years) manually segmented the sciatic nerve, including its distal branches the tibial and fibular nerve. The nerve segmentations were performed by each physician individually on the T2-weighted images, allowing the study of the inter-rater agreement. The segmentations were performed with the ITK-SNAP~\cite{py06nimg} software using the polygon or paintbrush tool. Important to point out is that the number of voxels belonging to the sciatic nerve only account for $0.14 \pm 0.05$ \% of the total image voxels. Figure~\ref{fig:gt_render} shows a \gls{3d} rendering of a sciatic nerve, including the branching, based on the ground truth segmentation of OS.\\
+We obtained a consensus ground truth segmentation, from now on referred to as GT, by the combination of the three expert ground truths via majority voting: A voxel was labelled sciatic nerve if at least two rater segmented it. In our case the obtained consensus ground truth is identical to the result that one would have received by applying the \gls{staple} algorithm~\cite{Warfield2004SimultaneousSTAPLE}, which is a common algorithm for label fusion.\\
 
 \begin{figure}[htbp]
 	\includegraphics[width=\textwidth]{24A_gt_render}
     \caption[Ground Truth Rendering]{Anterior view of a \gls{3d} rendering of a sciatic nerve based on the ground truth segmentation (rater OS). Clearly visible is the branching of the sciatic nerve into the tibial and fibular nerve.}
     \label{fig:gt_render}
 \end{figure}
-
-\begin{table}[htbp]
-   \centering
-   \caption[Descriptive Statistics of the Ground Truths]{The segmented ground truths with descriptive statistics of the voxel count and the mean sciatic nerve volume fraction.}
-   \begin{tabular}{l*{6}{l}}
-      \toprule
-      Rater	& Cohort	& Mean		& SD		& Min		& Max		& Mean Volume	\\
-      		&			& (voxels)	& (voxels)	& (voxels)	& (voxels)	& Fraction (\%)  \\
-      \midrule
-      OS  & Patient   & 13373.6 & 4602.1 & 7163.8 & 27428.4 & 0.155 \\
-          & Volunteer & 5521.4  & 596.2  & 4615.6 & 6464.4  & 0.103 \\
-      BW  & Patient   & 11519.1 & 5086.4 & 3691.7 & 30060.2 & 0.132 \\
-          & Volunteer & 4686.8  & 676.1  & 4145.3 & 6299.7  & 0.088 \\
-      LG  & Patient   & 12301.8 & 4035.2 & 4613.2 & 22526.4 & 0.142 \\
-          & Volunteer & 5375.3  & 674.5  & 4342.2 & 6314.0  & 0.100 \\
-      \midrule
-	  GT  & Patient   & 11927.2 & 4240.6 & 5860.5 & 24845.5 & 0.138 \\
-          & Volunteer & 5145.3  & 612.0  & 4458.0 & 6334.3  & 0.096 \\
-      \bottomrule
-   \end{tabular}
-   \label{tab:ground_truths}
-\end{table}
 
 
 \subsection{Software \& Frameworks}

@@ -1,18 +1,20 @@
 \begin{abstract}
+The peripheral nervous system (PNS) is susceptible to be affected by peripheral neuropathies, which are common (prevalence of approximately 2.4 up to 14.8 \%, rising with age) and can result in deficiencies or restrictions of sensory or motor abilities. 
+Diagnosis and assessment of peripheral neuropathies traditionally rely on neurological examinations, which might provide inconclusive results or are not amenable to deeply situated peripheral nerves. 
+Magnetic resonance neurography (MRN) has recently gained popularity as a complementary diagnostic tool for peripheral neuropathies. A problem, however, is that as of today MRN is qualitative because it is subjectively assessed by the radiologists. The use of MRN images to extract potential quantitative biomarkers, such as cross-sectional area and nerve compartment volume ratio have recently been proposed. However, a prerequisite for calculation of such biomarkers is the segmentation of the PNS, which is expensive and tedious work for radiologists, has reproducibility issues, and is not always clinically feasible. 
 
+This thesis aimed to develop a fully-automatic deep learning-based approach to segment the sciatic nerve from thigh MRN images and to investigate the impact of 3-D context on the segmentation performance.
+We retrospectively selected 52 thigh MRN cases separated into a patient cohort with diagnosed neuropathy (n = 42, 21 female, 21 male; 55.7 $\pm$ 15.7 years) and a healthy volunteer cohort (n = 10, 4 female, 6 male; 25.0 $\pm$ 2.6 years). Each MRN case consists of a low-resolution T2-weighted image with fat suppression using inversion recovery (IR), and a high-resolution T2-weighted image without fat suppression (T2). Furthermore, three ground truth segmentations of the sciatic nerve, manually done by experts, are available per MRN case.
+First, we trained a 2D fully-convolutional neural network on the IR and T2 images separately, and on both combined, to investigate their impact on the segmentation performance.
+Second, we developed and trained fully-convolutional neural networks with different access to the 3D context of the MRN images, and studied the impact of the 3D context on the performance. Additionally, we investigated the potential use of a novel, projection-based loss function. 
+Third, we applied post-processing to reduce the false positive rate in the segmentation of the neural networks. 
+Last, we compared the performance of our best performing method to the human inter-rater variability.
 
-
-
-
-
-
-
-
-
-
-
-
-
+Training a neural network only on the T2 image achieved almost the same performance as when trained on both (IR and T2) images. However, training on both images yielded the best performances as the IR image seemed to help to distinguish between sciatic nerve and blood vessels.
+Access to 3D context allowed for better segmentation performance. However, given the nature of our MRN images (4.40 mm slice distance), we obtained the best results with a mainly 2D driven approach with some 3D context. Training with the proposed projection-based loss function resulted in only slightly lower performance. However, we think this loss function could be potentially useful for the incorporation of, e.g., anatomical shape priors during the training phase.
+Applying our post-processing allowed for better segmentation performance, especially with regard to the distance-based metrics as the 95\textsuperscript{th} percentile Hausdorff distance.
+The best performing method achieved Dice coefficients of $0.779 \pm 0.123$ and $0.894 \pm 0.042$, volumetric similarities of $0.905 \pm 0.117$ and $0.942 \pm 0.050$ and 95\textsuperscript{th} percentile Hausdorff distances of $6.688  \pm 10.332$ mm and $0.655  \pm 0.355$ mm, for the patient and volunteer cohorts, respectively.
+From a statistical and quantitative point of view, our method achieves, or in the case of the Dice coefficient for the volunteer cohort surpasses human-level segmentation performances. Moreover, our method comes in with significant time gains, as the segmentation of an MRN case only takes around two minutes.
 
 \end{abstract}
 \endinput
