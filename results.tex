@@ -6,7 +6,7 @@ Finally, Section~\ref{sec:exp_evaluation} features the results obtained concerni
 The detailed results of the individual experiments can be found in the Appendix~\ref{app:results}.
 
 \section{Experiment 1: Feasibility} \label{sec:exp_feas} %=======================================================
-We successfully trained the baseline architecture on the \gls{mrn} images. In order to gain insight in the importance of the two input images (T2 and \gls{ir}), we trained the baseline architecture three times: once on each image separately, and once with both images. The mean and \gls{sd} for each of the training runs are summarized in Table~\ref{tab:results_feasibility}. Figure~\ref{fig:results_boxplot_T2_IR_dice} features a boxplot for the \acrlong{dice}. The results show that the training on both images yields the highest scores for all metrics except the \acrlong{vs} for the volunteer cohort. Training using only the T2 image results in comparable results as when trained with both images, concerning the \gls{dice} and \gls{vs} metrics. However, training using only the T2 image resulted in a significantly higher \gls{hd95} when compared to training on both images. Based on these results, we decided to use both images for all further training. The training took approximately 3 hours on a NVIDIA Titan Xp independent of the input. Testing a single \gls{mrn} case, hence segmenting it, took less than 3 seconds.
+We successfully trained the baseline architecture on the \gls{mrn} images. In order to gain insight in the importance of the two input images (T2 and \gls{ir}), we trained the baseline architecture three times: once on each image separately, and once with both images. The mean and \gls{sd} for each of the training runs are summarized in Table~\ref{tab:results_feasibility}. Figure~\ref{fig:results_boxplot_T2_IR_dice} features a boxplot for the \acrlong{dice}. Boxplots regarding the other metrics are situated in the appendix. The results show that the training on both images yields the highest scores for all metrics except the \acrlong{vs} for the volunteer cohort. Training using only the T2 image results in comparable results as when trained with both images, concerning the \gls{dice} and \gls{vs} metrics. However, training using only the T2 image resulted in a significantly higher \gls{hd95} when compared to training on both images. Based on these results, we decided to use both images for all further training. The training took approximately 3 hours on a NVIDIA Titan Xp independent of the input. Testing a single \gls{mrn} case, hence segmenting it, took less than 3 seconds.
 
 \begin{table}[htbp]
    \centering
@@ -197,7 +197,7 @@ In Figure~\ref{fig:res_inter_rater} the inter-rater agreement is shown as a heat
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[width=\textwidth]{boxplot_eval_DICE}
-    \caption[Boxplot of the \acrlong{dice} compared to the inter-rater performance]{Boxplot of \acrlong{dice} with the best performing architecture (FCNN-GT) and the inter-rater (R-R) performance.}
+    \caption[Boxplot of the \acrlong{dice} compared to the inter-rater performance]{Boxplot of \acrlong{dice} with the best performing architecture (FCNN-GT) and the inter-rater (R-R) performance. The best performing architecture achieves higher values for the volunteer cohort, with statistical significance. No statistically significant differences were found regarding the remaining metrics.}
     \label{fig:results_eval_boxplot_dice}
 \end{figure}
 

@@ -66,7 +66,6 @@ We obtained a consensus ground truth segmentation, from now on referred to as GT
     \label{fig:gt_render}
 \end{figure}
 
-
 \subsection{Software \& Frameworks}
 \subsubsection{Python}
 Python\footnote{https://www.python.org/} (Python Software Foundation, Wilmington, DE, U.S.) is an interpreted high-level programming language that is widely used in academia and industry due to its effectiveness. Python is cross-platform and open-source. For all programming in this work we use Python version 3.6 together with (but not exclusively) the packages mentioned below.
@@ -79,8 +78,8 @@ The Python package pymia\footnote{https://pymia.readthedocs.io/} is developed an
 ITK-SNAP\footnote{http://www.itksnap.org/} \cite{py06nimg} is an application for inspection and segmentation of medical images. The latest release of ITK-SNAP, version 3.6.0, was used to inspect the \gls{mrn} images, and to render and assess the ground truths and segmentations of the sciatic nerves.
 \subsubsection{Seaborn}
 Seaborn\footnote{https://seaborn.pydata.org/} is a statistical data visualization package for Python. We used Seaborn version 0.9.0 to analyze and plot our results.
-\subsubsection{LibreOffice Calc}
-LibreOffice Calc\footnote{https://www.libreoffice.org/} version 6.0.3.2 was used to create spreadsheets for the result tables.
+\subsubsection{SciPy}
+The stats-module of SciPy\footnote{https://www.scipy.org/} version 1.1.0 was used to make the statistical analysis of the results for the comparison to the inter-rater performance.
 
 \subsection{Hardware}
 Training of the neural networks was done on the \gls{mia} group's internal \gls{gpu} server. Most of the networks were trained on an NVIDIA Titan Xp. More demanding experiments, however, were trained on a NVIDIA Quadro P6000. Pre-processing, data augmentation and the calculation of the evaluation metrics were done using the \gls{cpu}. Post-processing was done on a desktop computer with an Intel Core i7 3.2 GHz \gls{cpu}, 64 GB memory running on Ubuntu 16.04 LTS.
@@ -101,23 +100,22 @@ Training of the neural networks was done on the \gls{mia} group's internal \gls{
    \label{tab:cluster}
 \end{table}
 
-\section{Pre-processing} \label{sec:preprocessing}
-Pre-processing is only applied to the \gls{mrn} image data of the \gls{ir} and T2 sequences. First, we registered the \gls{ir} image to the T2 image. Second, we normalized the intensities of the \gls{ir} and T2 images.\\
-We registered the \gls{ir} image to the T2 image because of its lower in-plane resolution. We used a two step registration: i) rigid registration with three pyramid levels, and ii) affine registration with three pyramid levels. Mutual information~\cite{Maes1997MultimodalityInformation} was used as similarity metric. One setting of registration parameters was tuned for all cases heuristically by qualitative inspection of the registration results.\\
-We intensity-normalized the \gls{mrn} images by subtracting the mean of each \gls{mrn} image and dividing by the standard deviation. This results in each \gls{mrn} case having an IR and T2 image with zero mean and unit variance. Input data normalization, as well as normalization in general, can be considered state-of-the-art and have been proven to be beneficial for training and performance of neural networks~\cite{Sola1997ImportanceProblems,SergeyIoffe2015BatchNormalization}.\\
-Finally, the images are cropped to the correct input dimensions of the neural network during the data augmentation step, resulting in in-plane dimensions of $300 \times 300$, and $128 \times 128$ pixels respectively.
-
-
 \section{Segmentation Pipeline}
 Our segmentation pipeline has two phases: The training and the evaluation phase, depicted in Figures \ref{fig:pipeline} \textbf{A)} and \textbf{B)}, respectively. We use the pre-processed T2 and IR images together with the ground truth images to train the \gls{fcnn}. Our pre-processing is described in Section~\ref{sec:preprocessing}. After pre-processing, we apply data augmentation. The trained \gls{fcnn} can then be used to segment the sciatic nerve from previously unseen (pre-processed) images. Finally, we apply post-processing to further leverage the segmenation accuracy.
 
-The experiments in this thesis focused mainly on the network architectures, and the post-processing. The network architectures are described in Section \ref{sec:architecture} and the post-processing is described in Section~ \ref{sec:postprocessing}. Details to the training are given in the Section \ref{sec:training}.
+The experiments in this thesis focused mainly on the network architectures, and the post-processing. The network architectures are described in Section \ref{sec:architecture} and the post-processing is described in Section~\ref{sec:postprocessing}. Details to the training are given in the Section \ref{sec:training}.
 
 \begin{figure}[htbp]
 	\caption[Segmentation Pipeline]{Overview for the two phases of the whole segmentation pipeline: \textbf{A)} The FCNN is trained with the pre-processed and augmented T2, IR and ground-truth images. The optimizer adjusts the neural networks's weights based on a defined loss function. \textbf{B)} Once fully trained, the FCNN can segment the sciatic nerve on new images without the ground truth image. Finally, optional post-processing is applied.}
 	\label{fig:pipeline}
 	\includegraphics[width=\textwidth]{pipeline}    
 \end{figure}
+
+\section{Pre-processing} \label{sec:preprocessing}
+Pre-processing is only applied to the \gls{mrn} image data of the \gls{ir} and T2 sequences. First, we registered the \gls{ir} image to the T2 image. Second, we normalized the intensities of the \gls{ir} and T2 images.\\
+We registered the \gls{ir} image to the T2 image because of its lower in-plane resolution. We used a two step registration: i) rigid registration with three pyramid levels, and ii) affine registration with three pyramid levels. Mutual information~\cite{Maes1997MultimodalityInformation} was used as similarity metric. One setting of registration parameters was tuned for all cases heuristically by qualitative inspection of the registration results.\\
+We intensity-normalized the \gls{mrn} images by subtracting the mean of each \gls{mrn} image and dividing by the standard deviation. This results in each \gls{mrn} case having an IR and T2 image with zero mean and unit variance. Input data normalization, as well as normalization in general, can be considered state-of-the-art and have been proven to be beneficial for training and performance of neural networks~\cite{Sola1997ImportanceProblems,SergeyIoffe2015BatchNormalization}.\\
+Finally, the images are cropped to the correct input dimensions of the neural network during the data augmentation step, resulting in in-plane dimensions of $300 \times 300$, and $128 \times 128$ pixels.
 
 \section{Network Architectures} \label{sec:architecture}
 We aim at investigating the optimal architecture and image input format for the segmentation tasks. Therefore, we selected a baseline architecture, which was incrementally changed based on our experiments and observations. As the baseline architecture we selected the \gls{fcnn} U-Net by Ronneberger et al.~\cite{Ronneberger2015U-Net:Segmentation}. The U-Net architecture has proven to work well for semantic segmentation tasks and was originally developed for biomedical image segmentation. All our \gls{fcnn}s base on the encoder-decoder architecture of the U-Net, which is depicted in Figure~\ref{fig:unet}. We used a slightly modified version of the original paper based on the current state-of-the-art. We use dropout layers \cite{Srivastava2014Dropout:Overfitting} with probability $p = 0.2$, perform Batch Normalization \cite{SergeyIoffe2015BatchNormalization} and use the \gls{relu} activation function after each convolutional layer for all of our Fs. We always perform \textit{same}-padding and a stride of 1 for all convolutions, unless otherwise stated. Additionally we use 32 channels on the first encoder level, doubling the number on each down-transition in the encoder path of the architecture.
@@ -163,16 +161,16 @@ The architectures have increasing access to the \gls{3d} information of the scia
 Our baseline architecture corresponds to the \gls{2d} U-Net as proposed by Ronneberger et al. \cite{Ronneberger2015U-Net:Segmentation} with dropout and Batch Normalization added. As mentioned before, we also start with 32 instead of 64 channels on the first encoder level. As Figure \ref{fig:subfig:inout_base} shows, the baseline architecture with its \gls{2d} kernels (3x3) handles \gls{2d} slices only, and therefore, has no access to \gls{3d}-contextual information. The details of the implemented architecture can be found in Table \ref{tab:architecture_fcnn_base} in the appendix.
 
 \subsection{3-D Stack-wise}
-Driven by our hypothesis, we define an architecture which still closely resembles the baseline architecture, but has more access to the \gls{3d} information in the \gls{mrn} images.
+Driven by our hypothesis, that \gls{3d} information might leverage the segmentation performance, we define an architecture which still closely resembles the baseline architecture, but has more access to the \gls{3d} information in the \gls{mrn} images.
 We expand the \gls{2d} U-Net architecture to \gls{3d} by exchanging all building blocks (Convolutional layers, Max Pooling, Batch Normalization) with their \gls{3d} equivalent, similarly to Cicek et al.~\cite{Cicek20163DAnnotation}. In contrast to \cite{Cicek20163DAnnotation}, we keep the number of down- and up-sampling transitions and alternate between \gls{2d} kernels ($1 \times 3 \times 3$) and \gls{3d} kernels ($3 \times 3 \times 3$) within every level.
 We feed this network multiple axial slices of $300 \times 300$ voxels as an input.
 With the use of \gls{3d} kernels, and the multiple slices as input, the neural network can incorporate more of the \gls{3d} information to make predictions.
 Details are to be found in in Table~\ref{tab:architecture_fcnn_volumetric} in the appendix. We trained the following versions of this architecture:
 \begin{itemize}
-  \item 3-to-1: 3 Input slices, prediction of 1 slice.
-  \item 5-to-1: 5 Input slices, prediction of 1 slice.
-  \item 5-to-3: 5 Input slices, prediction of 3 slices.
-  \item 5-to-3: 5 Input slices, prediction of 3 slices. Projection-based loss function.
+  \item Stack\_3to1: 3 Input slices, prediction of 1 slice.
+  \item Stack\_5to1: 5 Input slices, prediction of 1 slice.
+  \item Stack\_5to3: 5 Input slices, prediction of 3 slices.
+  \item Stack\_Proj: 5 Input slices, prediction of 3 slices. Projection-based loss function.
 \end{itemize}
 In essence, we feed the neural network the neighbouring slices (the previous two and next two in case of the 5-to-1 variant) to which it is supposed to make predictions about. We only predict fewer slices than the input slices because we expect to get better segmentation performance. The ability of the neural network to have access to all \gls{3d} information of the neighbouring slices should make it more confident about predictions on the slice(s) in the middle.
 For the reason that our \gls{mrn} images have a much higher axial spacing (4.40 mm) as in-plane (0.52 mm) and also a lower axial resolution (30 to 60 slices) we decide to keep the up- and down-transitions in-plane and therefore do not perform pooling along the axial axis.\\
