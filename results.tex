@@ -80,7 +80,7 @@ We successfully trained the neural networks with the proposed \gls{3d} architect
 
 
 \section{Experiment 3: Post-processing} \label{sec:exp_pp} % ====================================================
-We applied the developed post-processing to the baseline and stack-based (5 to 1 slices) architecture. Post-processing was done on a desktop computer with a 6-core Intel i7 processor, and took approximately 3 minutes for keeping the $n$ largest volumes only (\textit{Volumes only}) for all 52 subjects. The number of volumes to keep was tuned for both architectures, resulting in $n = 3$ and $n = 2$ volumes for the baseline and stack-wise architecture, respectively. Joining the volumes and then keeping only the largest one (\textit{Joint volumes}) took one hour to process for all 52 subjects. Table~\ref{tab:results_pp_small} presents the obtained results with respect to the \acrlong{dice}, \acrlong{vs}, and \acrlong{hd95} (see Table~\ref{tab:results_pp} for all metrics). The overlap-based metrics were not influenced much by the post-processing but highly affected the \gls{hd95}. The boxplot in Figure~\ref{fig:pp_boxplots_hd95} shows the \acrlong{hd95} for the post-processing (see Figures~\ref{fig:pp_boxplots_vs} to \ref{fig:pp_boxplots_hd} for the other metrics). The influence of the post-processing is further shown in Figure~\ref{fig:pp_patient_219}.
+We applied the developed post-processing to the baseline and stack-based (5 to 1 slices) architecture. Post-processing was done on a desktop computer with a 6-core Intel i7 processor, and took approximately 3 minutes for keeping the $n$ largest volumes only (\textit{Volumes only}) for all 52 subjects. The number of volumes to keep was tuned for both architectures, resulting in $n = 3$ and $n = 2$ volumes for the baseline and stack-wise architecture, respectively. Joining the volumes and then keeping only the largest one (\textit{Joint volumes}) took one hour to process for all 52 subjects. Table~\ref{tab:results_pp_small} presents the obtained results with respect to the \acrlong{dice}, \acrlong{vs}, and \acrlong{hd95} (see Table~\ref{tab:results_pp} for all metrics). The overlap-based metrics were not influenced much by the post-processing but highly affected the \gls{hd95}. The boxplot in Figure~\ref{fig:pp_boxplots_hd95} shows the \acrlong{hd95} for the post-processing (see Figures~\ref{fig:pp_boxplots_vs} to \ref{fig:pp_boxplots_hd} for the other metrics). The influence of the post-processing is further shown in Figures~\ref{fig:pp_render_219_V0_R4} and ~\ref{fig:pp_render_24A}.
 
 \begin{table}[htbp]
    \centering
@@ -127,22 +127,40 @@ We applied the developed post-processing to the baseline and stack-based (5 to 1
 	\label{fig:pp_boxplots_hd95}  
 \end{figure}
 
+\begin{figure}[htbp]
+	\centering
+	\subfloat[]
+	{
+		\label{fig:subfig:219_V0_R4_np}            \includegraphics[width=0.48\textwidth]{219_V0_R4_np}
+	}
+	\hfill
+	\subfloat[]
+	{
+		\label{fig:subfig:219_V0_R4_pp}            \includegraphics[width=0.48\textwidth]{219_V0_R4_pp}
+	}
+	\hfill
+	\includegraphics[width=0.3\textwidth]{viridis_legend}
+	
+	\caption[3-D Renderings of Patient Nerve]{Effect of the post-processing illustrated with \gls{3d} renderings of a segmented patient's sciatic nerve (patient 219\_V0\_R4). The color map encodes the surface-to-surface distance of the segmentation to the ground truth. \textbf{a)} Output segmentation of the Stack\_5to1 architecture without post-processing. \acrlong{dice} of 0.83 and \acrlong{hd95} of 2.21 mm. Note the false positive outliers. \textbf{b)} The same segmentation after applying \textit{joint volumes} post-processing.  \acrlong{dice} of 0.85 and \acrlong{hd95} of 1.47 mm.}
+	\label{fig:pp_render_219_V0_R4}   
+\end{figure}
 
 \begin{figure}[htbp]
 	\centering
 	\subfloat[]
 	{
-		\label{fig:subfig:pp_base_219}
-		\includegraphics[width=\textwidth]{pp_base_219}
+		\label{fig:subfig:24A_np}            \includegraphics[width=0.48\textwidth]{24A_np}
 	}
 	\hfill
 	\subfloat[]
 	{
-		\label{fig:subfig:pp_5to1_219}
-		\includegraphics[width=\textwidth]{pp_5to1_219}
+		\label{fig:subfig:24A_pp}            \includegraphics[width=0.48\textwidth]{24A_pp}
 	}
-	\caption[Segmentations Renderings]{Effect of the post-processing illustrated with \gls{3d} renderings of a segmented patient's sciatic nerve. \textbf{a)} Output segmentation of the baseline without post-processing (left), with $n$ largest volumes only (center), and with \textit{joint volumues} post-processing (right). \textbf{b)} Output segmentation of the best performing stack-wise architecture without post-processing (left), with $n$ largest volumes only (center), and with \textit{joint volumes} post-processing (right).}
-	\label{fig:pp_patient_219}  
+	\hfill
+	\includegraphics[width=0.3\textwidth]{viridis_legend}
+	
+	\caption[3-D Renderings of Volunteer Nerve]{Effect of the post-processing illustrated with \gls{3d} renderings of a segmented volunteer's sciatic nerve (volunteer 24A). The color map encodes the surface-to-surface distance of the segmentation to the ground truth. \textbf{a)} Output segmentation of the Stack\_5to1 architecture without post-processing. \acrlong{dice} of 0.82 and \acrlong{hd95} of 5.11 mm. Note the false positive outliers. \textbf{b)} The same segmentation after applying \textit{joint volumes} post-processing.  \acrlong{dice} of 0.89 and \acrlong{hd95} of 0.52 mm.}
+	\label{fig:pp_render_24A}   
 \end{figure}
 
 \section{Comparison to Human Inter-Rater Performance} \label{sec:exp_evaluation} % ===============================================================
