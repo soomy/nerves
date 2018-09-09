@@ -245,7 +245,7 @@ We use PyTorch's implementation of the Adam optimizer \cite{Kingma2014Adam:Optim
 \begin{figure}[htbp]
     \centering
 	\includegraphics[width=\textwidth]{fpfn}
-    \caption[Segmentation Issues]{First results showed that the unprocessed segmentations were typically corrupted by false positive (FP) outliers and false negatives (FN) visible as gaps. While the outliers impact the distance metrics, i.e. \gls{hd}, the gaps make post-processing harder: Simply keeping the largest volume present, would remove all smaller correctly segmented volumes (TP).}
+    \caption[Segmentation Issues]{First results showed that the unprocessed segmentations were typically corrupted by false positive (FP) outliers and false negatives (FN) visible as gaps. While the outliers impact the distance metrics, i.e. \acrlong{hd}, the gaps make post-processing harder: Simply keeping the largest volume present, would remove all smaller correctly segmented volumes (TP).}
     \label{fig:fpfn}
 \end{figure}
 Early experiments showed that there are \gls{fp} outliers as well as \gls{fn} discontinuities present in the segmentations, see Figure~\ref{fig:post_processing}. The distance metrics, especially the \acrshort{hd}, are sensitive to these (\acrshort{fp}). The (\acrshort{fp}) outliers all tend to have small volumes and therefore could easily be removed by keeping only the largest volume present in the segmentation. The presence of (\acrshort{fn}), visible as gaps, however, makes this a more difficult task: They split the nerve into multiple correctly segmented volumes (\acrshort{tp}). Simple and naive post-processing by keeping only the largest volume, would also remove all smaller correctly segmented volumes.
